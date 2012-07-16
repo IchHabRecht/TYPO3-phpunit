@@ -193,6 +193,16 @@ class Tx_Phpunit_Framework {
 		$this->createListOfOwnAllowedTables();
 		$this->createListOfAdditionalAllowedTables();
 		$this->uploadFolderPath = PATH_site . 'uploads/' . $this->tablePrefix . '/';
+
+		// Add possible allowed tables depending on TYPO3 version
+		$version = class_exists('t3lib_utility_VersionNumber')
+			? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
+			: t3lib_div::int_from_ver(TYPO3_version);
+
+		if ($version >= 6000000) {
+			$this->allowedSystemTables = array_merge($this->allowedSystemTables, array('sys_file', 'sys_file_collection',
+				'sys_file_reference', 'sys_category', 'sys_category_record_mm'));
+		}
 	}
 
 	/**
