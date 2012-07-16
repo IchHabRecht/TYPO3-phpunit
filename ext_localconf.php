@@ -26,5 +26,9 @@ if (TYPO3_MODE === 'BE') {
 		'EXT:' . $_EXTKEY . '/Classes/Cli/TestRunner.php',
 		'_CLI_phpunit',
 	);
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys'][$_EXTKEY . '_ide'] = array(
+		'EXT:' . $_EXTKEY . '/Classes/Cli/TestRunnerIde.php',
+		'_CLI_phpunit'
+	);
 }
 ?>
