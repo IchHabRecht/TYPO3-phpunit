@@ -1464,19 +1464,55 @@ class Tx_Phpunit_FrameworkTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function getAutoIncrementForTtContentTableIsAllowed() {
+	 * @test
+	 */
+	public function getAutoIncrementForTtContentTableIsAllowed() {
 		$this->fixture->getAutoIncrement('tt_content');
 	}
 
 	/**
-     * @test
-     *
-     * @expectedException InvalidArgumentException
-     */
-    public function getAutoIncrementWithOtherSystemTableFails() {
+	 * @test
+	 * @expectedException InvalidArgumentException
+	 */
+	public function getAutoIncrementWithOtherSystemTableFails() {
 		$this->fixture->getAutoIncrement('sys_domains');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getAutoIncrementForSysFileIsAllowed() {
+		$this->fixture->getAutoIncrement('sys_file');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getAutoIncrementForSysFileCollectionIsAllowed() {
+		$this->fixture->getAutoIncrement('sys_file_collection');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getAutoIncrementForSysFileReferenceIsAllowed() {
+		$this->fixture->getAutoIncrement('sys_file_reference');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getAutoIncrementForSysCategoryIsAllowed() {
+		$this->fixture->getAutoIncrement('sys_category');
+	}
+
+	/**
+	 * @test
+	 *
+	 * @expectedException InvalidArgumentException
+	 */
+	public function getAutoIncrementForSysCategoryRecordMmFails() {
+		$this->fixture->getAutoIncrement('sys_category_record_mm');
 	}
 
 	/**
@@ -1582,6 +1618,46 @@ class Tx_Phpunit_FrameworkTest extends tx_phpunit_testcase {
      */
     public function countRecordsWithTtContentTableIsAllowed() {
 		$table = 'tt_content';
+		$this->fixture->countRecords($table);
+	}
+
+	/**
+	 * @test
+	 */
+	public function countRecordsWithSysFileTableTableIsAllowed() {
+		$table = 'sys_file';
+		$this->fixture->countRecords($table);
+	}
+
+	/**
+	 * @test
+	 */
+	public function countRecordsWithSysFileCollectionTableTableIsAllowed() {
+		$table = 'sys_file_collection';
+		$this->fixture->countRecords($table);
+	}
+
+	/**
+	 * @test
+	 */
+	public function countRecordsWithSysFileReferenceTableTableIsAllowed() {
+		$table = 'sys_file_reference';
+		$this->fixture->countRecords($table);
+	}
+
+	/**
+	 * @test
+	 */
+	public function countRecordsWithSysCategoryTableTableIsAllowed() {
+		$table = 'sys_category';
+		$this->fixture->countRecords($table);
+	}
+
+	/**
+	 * @test
+	 */
+	public function countRecordsWithSysCategoryRecordMmTableTableIsAllowed() {
+		$table = 'sys_category_record_mm';
 		$this->fixture->countRecords($table);
 	}
 
@@ -2046,12 +2122,49 @@ class Tx_Phpunit_FrameworkTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     *
-     * @expectedException InvalidArgumentException
-     */
-    public function resetAutoIncrementWithOtherSystemTableFails() {
+	 * @test
+	 * @expectedException InvalidArgumentException
+	 */
+	public function resetAutoIncrementWithOtherSystemTableFails() {
 		$this->fixture->resetAutoIncrement('sys_domains');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementForSysFileTableIsAllowed() {
+		$this->fixture->resetAutoIncrement('sys_file');
+	}
+
+	/**
+	 * @test
+	 *
+	 */
+	public function resetAutoIncrementForSysFileCollectionTableIsAllowed() {
+		$this->fixture->resetAutoIncrement('sys_file_collection');
+	}
+
+	/**
+	 * @test
+	 *
+	 */
+	public function resetAutoIncrementForSysFileReferenceTableIsAllowed() {
+		$this->fixture->resetAutoIncrement('sys_file_reference');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementForSysCategoryTableIsAllowed() {
+		$this->fixture->resetAutoIncrement('sys_category');
+	}
+
+	/**
+	 * @test
+	 *
+	 */
+	public function resetAutoIncrementForSysCategoryRecordMmTableIsAllowed() {
+		$this->fixture->resetAutoIncrement('sys_category_record_mm');
 	}
 
 	/**
@@ -2123,12 +2236,46 @@ class Tx_Phpunit_FrameworkTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     *
-     * @expectedException InvalidArgumentException
-     */
-    public function resetAutoIncrementLazilyWithOtherSystemTableFails() {
+	 * @test
+	 * @expectedException InvalidArgumentException
+	 */
+	public function resetAutoIncrementLazilyWithOtherSystemTableFails() {
 		$this->fixture->resetAutoIncrementLazily('sys_domains');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementLazilyForSysFileTableIsAllowed() {
+		$this->fixture->resetAutoIncrementLazily('sys_file');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementLazilyForSysFileCollectionTableIsAllowed() {
+		$this->fixture->resetAutoIncrementLazily('sys_file_collection');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementLazilyForSysFileReferenceTableIsAllowed() {
+		$this->fixture->resetAutoIncrementLazily('sys_file_reference');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementLazilyForSysCategoryTableIsAllowed() {
+		$this->fixture->resetAutoIncrementLazily('sys_category');
+	}
+
+	/**
+	 * @test
+	 */
+	public function resetAutoIncrementLazilyForSysCategoryRecordMmTableIsAllowed() {
+		$this->fixture->resetAutoIncrementLazily('sys_category_record_mm');
 	}
 
 	/**

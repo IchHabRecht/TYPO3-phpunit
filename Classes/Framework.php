@@ -82,7 +82,8 @@ class Tx_Phpunit_Framework {
 	 */
 	protected $allowedSystemTables = array(
 		'be_users', 'fe_groups', 'fe_users', 'pages', 'sys_template',
-		'tt_content', 'be_groups'
+		'tt_content', 'be_groups', 'sys_file', 'sys_file_collection',
+		'sys_file_reference', 'sys_category', 'sys_category_record_mm'
 	);
 
 	/**
