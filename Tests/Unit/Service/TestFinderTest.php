@@ -91,6 +91,9 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		if (!class_exists($className, FALSE)) {
 			eval(
 				'class ' . $className . ' extends Tx_Phpunit_Service_TestFinder {' .
+				'  public function isNotFixturesPath($path) {' .
+				'    return parent::isNotFixturesPath($path);' .
+				'  }' .
 				'  public function isTestCaseFileName($path) {' .
 				'    return parent::isTestCaseFileName($path);' .
 				'  }' .
@@ -299,8 +302,9 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$path = 'OneTest.php';
 
 		/** @var $fixture Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject */
-		$fixture = $this->getMock('Tx_Phpunit_Service_TestFinder', array('isTestCaseFileName'));
-		$fixture->expects($this->at(0))->method('isTestCaseFileName')
+		$fixture = $this->getMock('Tx_Phpunit_Service_TestFinder', array('isNotFixturesPath', 'isTestCaseFileName'));
+		$fixture->expects($this->any())->method('isNotFixturesPath')->will(($this->returnValue(TRUE)));
+		$fixture->expects($this->at(1))->method('isTestCaseFileName')
 			->with($this->fixturesPath . $path)->will($this->returnValue(TRUE));
 
 		$this->assertContains(
@@ -316,8 +320,9 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$path = 'OneTest.php';
 
 		/** @var $fixture Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject */
-		$fixture = $this->getMock('Tx_Phpunit_Service_TestFinder', array('isTestCaseFileName'));
-		$fixture->expects($this->at(0))->method('isTestCaseFileName')
+		$fixture = $this->getMock('Tx_Phpunit_Service_TestFinder', array('isNotFixturesPath','isTestCaseFileName'));
+		$fixture->expects($this->any())->method('isNotFixturesPath')->will(($this->returnValue(TRUE)));
+		$fixture->expects($this->at(1))->method('isTestCaseFileName')
 			->with($this->fixturesPath . $path)->will($this->returnValue(FALSE));
 
 		$this->assertNotContains(
@@ -330,11 +335,11 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function findTestCaseFilesDirectoryFindsTestcaseInSubfolder() {
-		$path = 'Subfolder/AnotherTest.php';
+		$path = 'Service/TestFinderTest.php';
 
 		$this->assertContains(
 			$path,
-			$this->fixture->findTestCaseFilesDirectory($this->fixturesPath)
+			$this->fixture->findTestCaseFilesDirectory(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/')
 		);
 	}
 
@@ -342,7 +347,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function findTestCaseFilesDirectoryAcceptsPathWithTrailingSlash() {
-		$result = $this->fixture->findTestCaseFilesDirectory($this->fixturesPath);
+		$result = $this->fixture->findTestCaseFilesDirectory(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service');
 
 		$this->assertFalse(
 			empty($result)
@@ -354,7 +359,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 */
 	public function findTestCaseFilesDirectoryAcceptsPathWithoutTrailingSlash() {
 		$result = $this->fixture->findTestCaseFilesDirectory(
-			t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service/Fixtures'
+			t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service'
 		);
 
 		$this->assertFalse(
@@ -366,16 +371,52 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function findTestCaseFilesDirectorySortsFileNamesInAscendingOrder() {
-		$result = $this->fixture->findTestCaseFilesDirectory($this->fixturesPath);
+		$result = $this->fixture->findTestCaseFilesDirectory(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service/');
 
-		$fileName1 = 'OneTest.php';
-		$fileName2 = 'XTest.php';
+		$fileName1 = 'DatabaseTest.php';
+		$fileName2 = 'TestFinderTest.php';
 
 		$this->assertTrue(
 			array_search($fileName1, $result) < array_search($fileName2, $result)
 		);
 	}
 
+	/**
+	 * @test
+	 */
+	public function findTestCaseFilesDirectoryNotFindsFixtureClassesWithUppercasePath() {
+		$path = 'OneTest.php';
+
+		/** @var $fixture Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject */
+		$fixture = $this->getMock('Tx_Phpunit_Service_TestFinder', array('dummy'));
+
+		$this->assertNotContains(
+			$path,
+			$fixture->findTestCaseFilesDirectory($this->fixturesPath)
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function findTestCaseFilesDirectoryNotFindsFixtureClassesWithLowercasePath() {
+		if (!t3lib_extMgm::isLoaded('aaa')) {
+			$this->markTestSkipped(
+				'This test can only be run if the extension "aaa" from Tests/Unit/Fixtures/Extensions/ is installed.'
+			);
+		}
+
+		$path = t3lib_extMgm::extPath('aaa') . 'Tests/Unit/';
+		$fileName = 'AnotherTest.php';
+
+		/** @var $fixture Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject */
+		$fixture = $this->getMock('Tx_Phpunit_Service_TestFinder', array('dummy'));
+
+		$this->assertNotContains(
+			$fileName,
+			$fixture->findTestCaseFilesDirectory($path)
+		);
+	}
 
 	/**
 	 * @test
@@ -1020,13 +1061,13 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @expectedException Tx_Phpunit_Exception_NoTestsDirectory
 	 */
 	public function findTestsPathForExtensionForExtensionWithoutTestsPathThrowsException() {
-		if (!t3lib_extMgm::isLoaded('aaa')) {
+		if (!t3lib_extMgm::isLoaded('ccc')) {
 			$this->markTestSkipped(
-				'This test can only be run if the extension "aaa" from Tests/Unit/Fixtures/Extensions/ is installed.'
+				'This test can only be run if the extension "ccc" from Tests/Unit/Fixtures/Extensions/ is installed.'
 			);
 		}
 
-		$this->fixture->findTestsPathForExtension('aaa');
+		$this->fixture->findTestsPathForExtension('ccc');
 	}
 
 	/**
