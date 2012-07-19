@@ -47,6 +47,9 @@ require_once('PHPUnit/Autoload.php');
 
 $GLOBALS['LANG']->includeLLFile('EXT:phpunit/Resources/Private/Language/locallang_backend.xml');
 
+/** @var $namePrettifier PHPUnit_Util_TestDox_NamePrettifier */
+$namePrettifier = new PHPUnit_Util_TestDox_NamePrettifier();
+
 /** @var $outputService Tx_Phpunit_Service_OutputService */
 $outputService = t3lib_div::makeInstance('Tx_Phpunit_Service_OutputService');
 
@@ -55,6 +58,7 @@ $userSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_UserSettingsS
 
 /** @var $testListener Tx_Phpunit_BackEnd_TestListener */
 $testListener = t3lib_div::makeInstance('Tx_Phpunit_BackEnd_TestListener');
+$testListener->injectNamePrettifier($namePrettifier);
 $testListener->injectOutputService($outputService);
 
 /** @var $extensionSettingsService Tx_Phpunit_Service_ExtensionSettingsService */
