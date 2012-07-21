@@ -132,7 +132,7 @@ class Tx_Phpunit_BackEnd_ModuleTest extends Tx_Phpunit_TestCase {
 				'  public function renderRunTestsIntro() {' .
 				'    parent::renderRunTestsIntro();' .
 				'  }' .
-				'  public function createExtensionSelector() {' .
+				'  public function s() {' .
 				'    return parent::createExtensionSelector();' .
 				'  }' .
 				'  public function createTestCaseSelector($extensionKey = \'\') {' .
@@ -711,119 +711,6 @@ class Tx_Phpunit_BackEnd_ModuleTest extends Tx_Phpunit_TestCase {
 			$this->fixture->isAcceptedTestSuiteClass('Tx_Phpunit_Selenium_TestCase')
 		);
 	}
-
-
-	/*
-	 * Tests concerning createExtensionSelector
-	 */
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorCreatesForm() {
-		$this->assertContains(
-			'<form',
-			$this->fixture->createExtensionSelector()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorCreatesOptionForExtensionWithTests() {
-		$selectedExtension = 'aaa';
-
-		$className = $this->createAccessibleProxy();
-		/** @var $fixture Tx_Phpunit_BackEnd_Module */
-		$fixture = new $className();
-
-		$fixture->injectRequest($this->request);
-		$this->userSettingsService->set('extSel', $selectedExtension);
-		$fixture->injectUserSettingsService($this->userSettingsService);
-		$fixture->injectTestFinder($this->testFinder);
-
-		$this->assertRegExp(
-			'/<option[^>]*value="phpunit"/',
-			$fixture->createExtensionSelector()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorContainsExtensionKeyOfExtensionWithTests() {
-		$testable = new Tx_Phpunit_Testable();
-		$testable->setKey('t3dd11');
-
-		/** @var $testFinder Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject */
-		$testFinder = $this->getMock('Tx_Phpunit_Service_TestFinder', array('getTestablesForEverything'));
-		$testFinder->expects($this->once())->method('getTestablesForEverything')->will($this->returnValue(array($testable)));
-		$this->fixture->injectTestFinder($testFinder);
-
-		$this->assertRegExp(
-			'#<option [^>]*value="t3dd11">t3dd11</option>#',
-			$this->fixture->createExtensionSelector()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorContainsIconPathKeyOfExtensionWithTests() {
-		$this->assertContains(
-			'background: url(../typo3conf/ext/phpunit/ext_icon.gif)',
-			$this->fixture->createExtensionSelector()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorMarksSelectedExtensionAsSelected() {
-		$this->userSettingsService->set('extSel', 'phpunit');
-
-		$this->assertRegExp(
-			'#<option [^>]* selected="selected">phpunit</option>#',
-			$this->fixture->createExtensionSelector()
-		);
-
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorContainsKeyForAllExtensions() {
-		$this->assertRegExp(
-			'/<option [^>]*value="uuall"/',
-			$this->fixture->createExtensionSelector()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorForAllSelectedMarksAllAsSelected() {
-		$this->userSettingsService->set('extSel', Tx_Phpunit_Testable::ALL_EXTENSIONS);
-
-		$this->assertRegExp(
-			'/<option [^>]* value="' . Tx_Phpunit_Testable::ALL_EXTENSIONS . '" selected="selected">/',
-			$this->fixture->createExtensionSelector()
-		);
-
-	}
-
-	/**
-	 * @test
-	 */
-	public function createExtensionSelectorForOtherExtensionSelectedMarksAllAsNotSelected() {
-		$this->userSettingsService->set('extSel', 't3dd11');
-
-		$this->assertNotRegExp(
-			'/<option [^>]* value="uuall" selected="selected">/',
-			$this->fixture->createExtensionSelector()
-		);
-	}
-
 
 	/*
 	 * Tests concerning createTestCaseSelector
