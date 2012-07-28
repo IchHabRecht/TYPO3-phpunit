@@ -23,7 +23,11 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['Tx_Phpunit_BackEnd_Ajax']
 
 if (TYPO3_MODE === 'BE') {
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys'][$_EXTKEY] = array(
-		'EXT:' . $_EXTKEY . '/Classes/Cli/TestRunner.php',
+		'EXT:' . $_EXTKEY . '/Classes/TestRunner/CliTestRunner.php',
+		'_CLI_phpunit',
+	);
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['phpunit_ide_testrunner'] = array(
+		'EXT:' . $_EXTKEY . '/Classes/TestRunner/IdeTestRunner.php',
 		'_CLI_phpunit',
 	);
 }
