@@ -26,8 +26,6 @@ if (!defined('TYPO3_cliMode')) {
 	die('Access denied: CLI only.');
 }
 
-require_once('PHPUnit/Autoload.php');
-
 /**
  * This class runs PHPUnit in CLI mode.
  *
@@ -36,7 +34,7 @@ require_once('PHPUnit/Autoload.php');
  *
  * @author Michael Klapper <michael.klapper@aoemedia.de>
  */
-class Tx_Phpunit_Cli_TestRunner extends t3lib_cli {
+abstract class Tx_Phpunit_TestRunner_AbstractTestRunner extends t3lib_cli {
 	/**
 	 * definition of the extension name
 	 *
@@ -56,30 +54,14 @@ class Tx_Phpunit_Cli_TestRunner extends t3lib_cli {
 		$this->cli_help = array_merge(
 			$this->cli_help,
 			array(
-				'name' => 'tx_phpunit_cli_phpunit',
-				'synopsis' => $this->extKey . ' command [clientId] ###OPTIONS###',
-				'description' => 'This script can update a list of several caches (per CLI-call can one cache be updated)',
-				'examples' => 'typo3/cli_dispatch.phpsh',
+				'name' => 'Tx_Phpunit_TestRunner_CliTestRunner',
+				'synopsis' => $this->extKey . ' <test or test folder> ###OPTIONS###',
+				'description' => 'This script can execute TYPO3 unit tests using PHPUnit',
+				'examples' => 'typo3/cli_dispatch.phpsh ' . $this->extKey .' tests',
 				'author' => '(c) 2009-2012 AOE media GmbH <dev@aoemedia.de>',
 			)
 		);
 	}
-
-	/**
-	 * Detects the action and calls the related methods.
-	 *
-	 * @return void
-	 */
-	public function run() {
-		/**
-		 * @var string
-		 */
-		define('PHPUnit_MAIN_METHOD', 'PHPUnit_TextUI_Command::main');
-		PHPUnit_TextUI_Command::main();
-	}
 }
 
-/* @var $phpUnit Tx_Phpunit_Cli_TestRunner */
-$phpUnit = t3lib_div::makeInstance('Tx_Phpunit_Cli_TestRunner');
-$phpUnit->run();
 ?>
