@@ -598,7 +598,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 
 		$this->loadAllFilesContainingTestCasesForTestables($testablesToProcess);
 
-		$testSuite = $this->createTestSuiteWithAllTestCases();
+		$testSuite = $this->createTestSuiteWithTestCasesToBeRun();
 
 		$testResult = new PHPUnit_Framework_TestResult();
 
@@ -615,8 +615,6 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 
 		if ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
 			$this->runSingleTest($testSuite, $testResult);
-		} elseif ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) {
-			$this->runTestCase($testSuite, $testResult);
 		} else {
 			$this->runAllTests($testSuite, $testResult);
 		}
@@ -695,26 +693,35 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	}
 
 	/**
-	 * Creates a test suite that contains all test cases in the systems (but filters out this extension's base test cases).
+	 * Creates a test suite that contains all test cases that should be run with the current
+	 * request configuration.
 	 *
-	 * @return PHPUnit_Framework_TestSuite the test suite with all test cases added
+	 * @return PHPUnit_Framework_TestSuite the test suite with all needed test cases added
 	 */
-	protected function createTestSuiteWithAllTestCases() {
+	protected function createTestSuiteWithTestCasesToBeRun() {
 		$testSuite = new PHPUnit_Framework_TestSuite('tx_phpunit_basetestsuite');
 
-		foreach (get_declared_classes() as $class) {
-			$classReflection = new ReflectionClass($class);
-			if ($classReflection->isSubclassOf('Tx_Phpunit_TestCase')
-				&& ((strtolower(substr($class, -8, 8)) === 'testcase') || (substr($class, -4, 4) === 'Test'))
-				&& ($class !== 'Tx_Phpunit_TestCase') && ($class !== 'Tx_Phpunit_Database_TestCase')
-			) {
-				$testSuite->addTestSuite($class);
-			} elseif ($this->userSettingsService->getAsBoolean('runSeleniumTests')
-				&& $classReflection->isSubclassOf('Tx_Phpunit_Selenium_TestCase')
-				&& ((strtolower(substr($class, -8, 8)) === 'testcase') || (substr($class, -4, 4) === 'Test'))
-				&& ($class !== 'Tx_Phpunit_Selenium_TestCase')
-			) {
-				$testSuite->addTestSuite($class);
+			// In case a single test case is selected, we only add that test case to the test suite.
+		$selectedTestCase = NULL;
+		if ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) {
+			$selectedTestCase = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE);
+		} elseif ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
+			list($selectedTestCase, $unused) = explode('::', $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST));
+		}
+
+		if ($selectedTestCase !== NULL) {
+			foreach (get_declared_classes() as $class) {
+				if ($class === $selectedTestCase && $this->shouldAddClassToTestSuite($class)) {
+					$testSuite->addTestSuite($class);
+					break;
+				}
+			}
+		} else {
+				// If neither a single test case nor a test was found, add all known test cases
+			foreach (get_declared_classes() as $class) {
+				if ($this->shouldAddClassToTestSuite($class)) {
+					$testSuite->addTestSuite($class);
+				}
 			}
 		}
 
@@ -747,98 +754,19 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	protected function runSingleTest(
 		PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
 	) {
+		$testIdentifier = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST);
+		$testIdentifierFilter = "/^$testIdentifier$/";
+
+		$this->testListener->setTotalNumberOfTests(1);
 		$this->renderProgressbar();
-		/** @var $testCases PHPUnit_Framework_TestSuite */
-		foreach ($testSuiteWithAllTestCases->tests() as $testCases) {
-			foreach ($testCases->tests() as $test) {
-				if ($test instanceof PHPUnit_Framework_TestSuite) {
-					/** @var $test PHPUnit_Framework_TestSuite */
-					list($testSuiteName, $testName) = explode('::', $test->getName());
-					$this->testListener->setTestSuiteName($testSuiteName);
-					$testIdentifier = $testName . '(' . $testSuiteName . ')';
-				} else {
-					$testIdentifier = $test->toString();
-					list($testSuiteName, $unused) = explode('::', $testIdentifier);
-					$this->testListener->setTestSuiteName($testSuiteName);
-				}
-				if ($testIdentifier === $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
-					if ($test instanceof PHPUnit_Framework_TestSuite) {
-						$this->testListener->setTotalNumberOfTests($test->count());
-					} else {
-						$this->testListener->setTotalNumberOfTests(1);
-					}
-					$this->outputService->output('<h2 class="testSuiteName">Testsuite: ' . $testCases->getName() . '</h2>');
-					$test->run($testResult);
-				}
-			}
-		}
+		$testSuiteWithAllTestCases->run($testResult, $testIdentifierFilter);
+
 		if (!is_object($testResult)) {
 			$this->outputService->output(
 				'<h2 class="hadError">Error</h2><p>The test <strong> ' .
 					htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) .
 					'</strong> could not be found.</p>'
 			);
-		}
-	}
-
-	/**
-	 * Runs a testcase as given in the GET/POST variable "testCaseFile".
-	 *
-	 * @param PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases suite with all test cases
-	 * @param PHPUnit_Framework_TestResult $testResult the test result (will be modified)
-	 *
-	 * @return void
-	 */
-	protected function runTestCase(
-		PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
-	) {
-		$testCaseFileName = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE);
-		$this->testListener->setTestSuiteName($testCaseFileName);
-
-		$suiteNameHasBeenDisplayed = FALSE;
-		$totalNumberOfTestCases = 0;
-		foreach ($testSuiteWithAllTestCases->tests() as $testCases) {
-			foreach ($testCases->tests() as $test) {
-				if ($test instanceof PHPUnit_Framework_TestSuite) {
-					list($testIdentifier, $unused) = explode('::', $test->getName());
-				} else {
-					$testIdentifier = get_class($test);
-				}
-				if ($testIdentifier === $testCaseFileName) {
-					if ($test instanceof PHPUnit_Framework_TestSuite) {
-						$totalNumberOfTestCases += $test->count();
-					} else {
-						$totalNumberOfTestCases++;
-					}
-				}
-			}
-		}
-		$this->testListener->setTotalNumberOfTests($totalNumberOfTestCases);
-		$this->renderProgressbar();
-
-		foreach ($testSuiteWithAllTestCases->tests() as $testCases) {
-			foreach ($testCases->tests() as $test) {
-				if ($test instanceof PHPUnit_Framework_TestSuite) {
-					list($testIdentifier, $unused) = explode('::', $test->getName());
-				} else {
-					$testIdentifier = get_class($test);
-				}
-				if ($testIdentifier === $testCaseFileName) {
-					if (!$suiteNameHasBeenDisplayed) {
-						$this->outputService->output('<h2 class="testSuiteName">Testsuite: ' . $testCaseFileName . '</h2>');
-						$suiteNameHasBeenDisplayed = TRUE;
-					}
-					$test->run($testResult);
-				}
-			}
-		}
-		if (!is_object($testResult)) {
-			$this->outputService->output(
-				'<h2 class="hadError">Error</h2><p>The test <strong> ' .
-					htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) .
-					'</strong> could not be found.</p>'
-			);
-			return;
 		}
 	}
 
@@ -1068,6 +996,40 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	 */
 	protected function shouldCollectCodeCoverageInformation() {
 		return $this->userSettingsService->getAsBoolean('codeCoverage') && extension_loaded('xdebug');
+	}
+
+	/**
+	 * Determine if the passed test class should be added to the TestSuite.
+	 * This is determined by the class hierarchy and the extension configuration
+	 * (e.g. whether or not Selenium test cases should be included).
+	 *
+	 * @param string $class class name to test, migth not be empty
+	 *
+	 * @return boolean TRUE if the class should be added, otherwise FALSE
+	 */
+	protected function shouldAddClassToTestSuite($class) {
+		if ($class === '') {
+			throw new InvalidArgumentException('$class must not be empty.', 1344292294);
+		}
+
+		$classReflection = new ReflectionClass($class);
+
+		if ($classReflection->isSubclassOf('Tx_Phpunit_TestCase')
+			&& ((strtolower(substr($class, -8, 8)) === 'testcase') || (substr($class, -4, 4) === 'Test'))
+			&& ($class !== 'Tx_Phpunit_TestCase') && ($class !== 'Tx_Phpunit_Database_TestCase')
+		) {
+			return TRUE;
+		}
+
+		if ($this->userSettingsService->getAsBoolean('runSeleniumTests')
+			&& $classReflection->isSubclassOf('Tx_Phpunit_Selenium_TestCase')
+			&& ((strtolower(substr($class, -8, 8)) === 'testcase') || (substr($class, -4, 4) === 'Test'))
+			&& ($class !== 'Tx_Phpunit_Selenium_TestCase')
+		) {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 }
 ?>
