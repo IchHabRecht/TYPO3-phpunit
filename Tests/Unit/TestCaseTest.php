@@ -102,8 +102,24 @@ class Tx_Phpunit_TestCaseTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 * @expectedException InvalidArgumentException
 	 */
+	public function setStaticForEmptyPropertyNameInAccessibleMockObjectThrowsException() {
+		$this->accessibleMock->_setStatic('', '');
+	}
+
+	/**
+	 * @test
+	 * @expectedException InvalidArgumentException
+	 */
 	public function getForEmptyPropertyNameInAccessibleMockObjectThrowsException() {
 		$this->accessibleMock->_get('');
+	}
+
+	/**
+	 * @test
+	 * @expectedException InvalidArgumentException
+	 */
+	public function getStaticForEmptyPropertyNameInAccessibleMockObjectThrowsException() {
+		$this->accessibleMock->_getStatic('');
 	}
 
 	/**
@@ -112,6 +128,15 @@ class Tx_Phpunit_TestCaseTest extends Tx_Phpunit_TestCase {
 	public function protectedPropertyForFixtureIsNotDirectlyAccessible() {
 		$this->assertFalse(
 			in_array('protectedProperty', get_object_vars($this->proctectedClassInstance))
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function protectedStaticPropertyForFixtureIsNotDirectlyAccessible() {
+		$this->assertFalse(
+			array_key_exists('protectedStaticProperty', get_class_vars(get_class($this->proctectedClassInstance)))
 		);
 	}
 
@@ -149,6 +174,15 @@ class Tx_Phpunit_TestCaseTest extends Tx_Phpunit_TestCase {
 	public function protectedPropertyForMockObjectIsNotDirectlyAccessible() {
 		$this->assertFalse(
 			in_array('protectedProperty', get_object_vars($this->mock))
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function protectedStaticPropertyForMockObjectIsNotDirectlyAccessible() {
+		$this->assertFalse(
+			array_key_exists('protectedStaticProperty', get_class_vars(get_class($this->mock)))
 		);
 	}
 
@@ -198,6 +232,34 @@ class Tx_Phpunit_TestCaseTest extends Tx_Phpunit_TestCase {
 			'This is a public property.',
 			$this->accessibleMock->_get('publicProperty')
 		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function protectedStaticPropertyForAccessibleMockObjectIsDirectlyAccessible() {
+		$this->assertSame(
+			'This is a protected static property.',
+			$this->accessibleMock->_getStatic('protectedStaticProperty')
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function protectedStaticPropertyForAccessibleMockObjectCanBeSet() {
+		$newValue = 'New value';
+			// As static variables are still available after unset,
+			// we have to save the old value to reset it afterwards.
+		$oldValue = $this->accessibleMock->_getStatic('protectedStaticProperty');
+		$this->accessibleMock->_setStatic('protectedStaticProperty', $newValue);
+
+		$this->assertSame(
+			$newValue,
+			$this->accessibleMock->_getStatic('protectedStaticProperty')
+		);
+
+		$this->accessibleMock->_setStatic('protectedStaticProperty', $oldValue);
 	}
 
 	/**
