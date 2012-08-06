@@ -575,7 +575,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 
 		$this->loadAllFilesContainingTestCasesForTestables($testablesToProcess);
 
-		$testSuite = $this->createTestSuiteWithAllTestCases();
+		$testSuite = $this->createTestSuiteWithTestCasesToBeRun();
 
 		$testResult = new PHPUnit_Framework_TestResult();
 
@@ -592,8 +592,6 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 
 		if ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
 			$this->runSingleTest($testSuite, $testResult);
-		} elseif ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) {
-			$this->runTestCase($testSuite, $testResult);
 		} else {
 			$this->runAllTests($testSuite, $testResult);
 		}
@@ -683,16 +681,39 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	}
 
 	/**
-	 * Creates a test suite that contains all test cases in the systems (but filters out this extension's base test cases).
+	 * Creates a test suite that contains all test cases that should be run with the current
+	 * request configuration.
 	 *
-	 * @return PHPUnit_Framework_TestSuite the test suite with all test cases added
+	 * @todo Move this to the test finder class and cover it with unit tests.
+	 *
+	 * @return PHPUnit_Framework_TestSuite the test suite with all needed test cases added
 	 */
-	protected function createTestSuiteWithAllTestCases() {
+	protected function createTestSuiteWithTestCasesToBeRun() {
 		$testSuite = new PHPUnit_Framework_TestSuite('tx_phpunit_basetestsuite');
 
-		foreach (get_declared_classes() as $className) {
-			if ($this->testCaseService->isValidTestCaseClassName($className)) {
-				$testSuite->addTestSuite($className);
+		// In case a single test case is selected, we only add that test case to the test suite.
+		// @todo Instead of having a comment here, split this function up into well-named functions
+		$testCaseName = NULL;
+		$testName = NULL;
+		if ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
+			list($testCaseName, $testName) = explode('::', $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST));
+		} else if ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) {
+			$testCaseName = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE);
+		}
+
+		if ($testCaseName !== NULL) {
+			foreach (get_declared_classes() as $className) {
+				if (($className === $testCaseName) && $this->testCaseService->isValidTestCaseClassName($className)) {
+					$testSuite->addTestSuite($className);
+					break;
+				}
+			}
+		} else {
+			// If neither a single test case nor a test was found, add all known test cases
+			foreach (get_declared_classes() as $className) {
+				if ($this->testCaseService->isValidTestCaseClassName($className)) {
+					$testSuite->addTestSuite($className);
+				}
 			}
 		}
 
@@ -725,98 +746,19 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	protected function runSingleTest(
 		PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
 	) {
+		$testIdentifier = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST);
+		$testIdentifierFilter = '/^' . $testIdentifier . '$/';
+
+		$this->testListener->setTotalNumberOfTests(1);
 		$this->renderProgressbar();
-		/** @var $testCases PHPUnit_Framework_TestSuite */
-		foreach ($testSuiteWithAllTestCases->tests() as $testCases) {
-			foreach ($testCases->tests() as $test) {
-				if ($test instanceof PHPUnit_Framework_TestSuite) {
-					/** @var $test PHPUnit_Framework_TestSuite */
-					list($testSuiteName, $testName) = explode('::', $test->getName());
-					$this->testListener->setTestSuiteName($testSuiteName);
-					$testIdentifier = $testName . '(' . $testSuiteName . ')';
-				} else {
-					$testIdentifier = $test->toString();
-					list($testSuiteName, $unused) = explode('::', $testIdentifier);
-					$this->testListener->setTestSuiteName($testSuiteName);
-				}
-				if ($testIdentifier === $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
-					if ($test instanceof PHPUnit_Framework_TestSuite) {
-						$this->testListener->setTotalNumberOfTests($test->count());
-					} else {
-						$this->testListener->setTotalNumberOfTests(1);
-					}
-					$this->outputService->output('<h2 class="testSuiteName">Testsuite: ' . $testCases->getName() . '</h2>');
-					$test->run($testResult);
-				}
-			}
-		}
+		$testSuiteWithAllTestCases->run($testResult, $testIdentifierFilter);
+
 		if (!is_object($testResult)) {
 			$this->outputService->output(
 				'<h2 class="hadError">Error</h2><p>The test <strong> ' .
 					htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) .
 					'</strong> could not be found.</p>'
 			);
-		}
-	}
-
-	/**
-	 * Runs a testcase as given in the GET/POST variable "testCaseFile".
-	 *
-	 * @param PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases suite with all test cases
-	 * @param PHPUnit_Framework_TestResult $testResult the test result (will be modified)
-	 *
-	 * @return void
-	 */
-	protected function runTestCase(
-		PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
-	) {
-		$testCaseFileName = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE);
-		$this->testListener->setTestSuiteName($testCaseFileName);
-
-		$suiteNameHasBeenDisplayed = FALSE;
-		$totalNumberOfTestCases = 0;
-		foreach ($testSuiteWithAllTestCases->tests() as $testCases) {
-			foreach ($testCases->tests() as $test) {
-				if ($test instanceof PHPUnit_Framework_TestSuite) {
-					list($testIdentifier, $unused) = explode('::', $test->getName());
-				} else {
-					$testIdentifier = get_class($test);
-				}
-				if ($testIdentifier === $testCaseFileName) {
-					if ($test instanceof PHPUnit_Framework_TestSuite) {
-						$totalNumberOfTestCases += $test->count();
-					} else {
-						$totalNumberOfTestCases++;
-					}
-				}
-			}
-		}
-		$this->testListener->setTotalNumberOfTests($totalNumberOfTestCases);
-		$this->renderProgressbar();
-
-		foreach ($testSuiteWithAllTestCases->tests() as $testCases) {
-			foreach ($testCases->tests() as $test) {
-				if ($test instanceof PHPUnit_Framework_TestSuite) {
-					list($testIdentifier, $unused) = explode('::', $test->getName());
-				} else {
-					$testIdentifier = get_class($test);
-				}
-				if ($testIdentifier === $testCaseFileName) {
-					if (!$suiteNameHasBeenDisplayed) {
-						$this->outputService->output('<h2 class="testSuiteName">Testsuite: ' . $testCaseFileName . '</h2>');
-						$suiteNameHasBeenDisplayed = TRUE;
-					}
-					$test->run($testResult);
-				}
-			}
-		}
-		if (!is_object($testResult)) {
-			$this->outputService->output(
-				'<h2 class="hadError">Error</h2><p>The test <strong> ' .
-					htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) .
-					'</strong> could not be found.</p>'
-			);
-			return;
 		}
 	}
 
