@@ -14,6 +14,11 @@ class Tx_Phpunit_Tests_Fixtures_ProtectedClass {
 	public $publicProperty = 'This is a public property.';
 
 	/**
+	 * @var string
+	 */
+	protected static $protectedStaticProperty = 'This is a protected static property.';
+
+	/**
 	 * Protected test function which returns TRUE when processed.
 	 *
 	 * @return boolean always TRUE
