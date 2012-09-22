@@ -427,7 +427,11 @@ class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
 		$testable->setTitle($this->retrieveExtensionTitle($extensionKey));
 		$testable->setCodePath(t3lib_extMgm::extPath($extensionKey));
 		$testable->setTestsPath($testsPath);
-		$testable->setIconPath(t3lib_extMgm::extRelPath($extensionKey) . 'ext_icon.gif');
+		if (file_exists(t3lib_extMgm::extPath($extensionKey) . 'ext_icon.gif')) {
+			$testable->setIconPath(t3lib_extMgm::extRelPath($extensionKey) . 'ext_icon.gif');
+		} elseif (file_exists(t3lib_extMgm::extPath($extensionKey) . 'ext_icon.png')) {
+			$testable->setIconPath(t3lib_extMgm::extRelPath($extensionKey) . 'ext_icon.png');
+		}
 
 		return $testable;
 	}
