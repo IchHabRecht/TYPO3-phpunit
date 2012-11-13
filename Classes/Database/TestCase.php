@@ -66,7 +66,7 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 
 	/**
 	 * Accesses the TYPO3 database instance and uses it to fetch the list of
-	 * abailable databases. Then this function creates a test database (if none
+	 * available databases. Then this function creates a test database (if none
 	 * has been set up yet).
 	 *
 	 * @return boolean

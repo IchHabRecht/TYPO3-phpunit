@@ -75,7 +75,7 @@ class Tx_Phpunit_Framework {
 	protected $additionalAllowedTables = array();
 
 	/**
-	 * all sytem table names to which this instance of the testing framework
+	 * all system table names to which this instance of the testing framework
 	 * has access
 	 *
 	 * @var array
@@ -904,7 +904,7 @@ class Tx_Phpunit_Framework {
 		foreach ($contents as $pathToFile) {
 			if (!file_exists($pathToFile)) {
 				throw new t3lib_exception(
-					'The provided path "' . $pathToFile . '" does not point to an exisiting file.', 1334439306
+					'The provided path "' . $pathToFile . '" does not point to an existing file.', 1334439306
 				);
 			}
 			$zip->addFile($pathToFile, $this->getPathRelativeToUploadDirectory($pathToFile));
@@ -1619,7 +1619,7 @@ class Tx_Phpunit_Framework {
 	 * UID + 1 if the current auto increment value is higher than a certain
 	 * threshold over the current maximum UID.
 	 *
-	 * The threshhold is 100 by default and can be set using
+	 * The threshold is 100 by default and can be set using
 	 * setResetAutoIncrementThreshold.
 	 *
 	 * @param string $tableName
