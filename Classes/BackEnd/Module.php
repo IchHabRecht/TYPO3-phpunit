@@ -442,7 +442,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 		$testCaseFile = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE);
 		/** @var $testCase PHPUnit_Framework_TestSuite */
 		foreach ($testSuite->tests() as $testCase) {
-			if (!is_null($testCaseFile) && ($testCase->getName() !== $testCaseFile)) {
+			if (($testCaseFile !== NULL) && ($testCase->getName() !== $testCaseFile)) {
 				continue;
 			}
 			/** @var $test PHPUnit_Framework_TestCase */

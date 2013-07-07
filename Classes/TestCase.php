@@ -66,6 +66,8 @@ abstract class Tx_Phpunit_TestCase extends PHPUnit_Framework_TestCase {
 	 * @return PHPUnit_Framework_MockObject_MockObject|Tx_Phpunit_Interface_AccessibleObject
 	 *         a mock of $originalClassName with access methods added
 	 *
+	 * @throws InvalidArgumentException
+	 *
 	 * @see Tx_Extbase_Tests_Unit_BaseTestCase::getAccessibleMock
 	 */
 	protected function getAccessibleMock(

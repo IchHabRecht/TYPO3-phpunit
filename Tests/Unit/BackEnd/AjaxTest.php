@@ -51,8 +51,8 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	private $postBackup = array();
 
 	public function setUp() {
-		$this->postBackup = $_POST;
-		$_POST = array();
+		$this->postBackup = $GLOBALS['_POST'];
+		$GLOBALS['_POST'] = array();
 
 		$this->fixture = new Tx_Phpunit_BackEnd_Ajax(FALSE);
 
@@ -61,7 +61,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	}
 
 	public function tearDown() {
-		$_POST = $this->postBackup;
+		$GLOBALS['_POST'] = $this->postBackup;
 
 		unset($this->fixture, $this->postBackup, $this->userSettingsService);
 	}
@@ -70,8 +70,8 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForFailureCheckboxParameterAndStateTrueSavesTrueStateToUserSettings() {
-		$_POST['checkbox'] = 'failure';
-		$_POST['state'] = '1';
+		$GLOBALS['_POST']['checkbox'] = 'failure';
+		$GLOBALS['_POST']['state'] = '1';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject  */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -86,7 +86,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForFailureCheckboxParameterAndMissingStateSavesFalseStateToUserSettings() {
-		$_POST['checkbox'] = 'failure';
+		$GLOBALS['_POST']['checkbox'] = 'failure';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject  */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -101,7 +101,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForFailureCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'failure';
+		$GLOBALS['_POST']['checkbox'] = 'failure';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -115,7 +115,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForSuccessCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'success';
+		$GLOBALS['_POST']['checkbox'] = 'success';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -129,7 +129,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForErrorCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'error';
+		$GLOBALS['_POST']['checkbox'] = 'error';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -143,7 +143,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForSkippedCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'skipped';
+		$GLOBALS['_POST']['checkbox'] = 'skipped';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -157,7 +157,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForIncompleteCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'incomplete';
+		$GLOBALS['_POST']['checkbox'] = 'incomplete';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -171,7 +171,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForTestDoxCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'testdox';
+		$GLOBALS['_POST']['checkbox'] = 'testdox';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -185,7 +185,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForCodeCoverageCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'codeCoverage';
+		$GLOBALS['_POST']['checkbox'] = 'codeCoverage';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -199,7 +199,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForShowMemoryAndTimeCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'showMemoryAndTime';
+		$GLOBALS['_POST']['checkbox'] = 'showMemoryAndTime';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -213,7 +213,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForRunSeleniumTestsCheckboxParameterAddsSuccessContent() {
-		$_POST['checkbox'] = 'runSeleniumTests';
+		$GLOBALS['_POST']['checkbox'] = 'runSeleniumTests';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');
@@ -238,7 +238,7 @@ class Tx_Phpunit_BackEnd_AjaxTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function ajaxBrokerForInvalidCheckboxParameterSetsError() {
-		$_POST['checkbox'] = 'anything else';
+		$GLOBALS['_POST']['checkbox'] = 'anything else';
 
 		/** @var $ajax TYPO3AJAX|PHPUnit_Framework_MockObject_MockObject */
 		$ajax = $this->getMock('TYPO3AJAX');

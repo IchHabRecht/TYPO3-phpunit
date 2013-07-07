@@ -30,7 +30,7 @@
  *
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  */
-class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
+class Tx_Phpunit_Service_DatabaseTest extends Tx_PhpUnit_TestCase {
 	/**
 	 * @var Tx_Phpunit_Framework
 	 */
@@ -47,9 +47,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	//////////////////////
-	// Utility functions
-	//////////////////////
+	/*
+	 * Utility functions
+	 */
 
 	/**
 	 * Explodes a comma-separated list of integer values and sorts them
@@ -71,9 +71,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	////////////////////////////////////
-	// Tests for the utility functions
-	////////////////////////////////////
+	/*
+	 * Tests for the utility functions
+	 */
 
 	/**
      * @test
@@ -116,9 +116,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	//////////////////////////////////
-	// Tests for enableFields
-	//////////////////////////////////
+	/*
+	 * Tests for enableFields
+	 */
 
 	/**
      * @test
@@ -189,8 +189,7 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-	 * TODO: This test does not work until the full versioning feature is
-	 * implemented in the testing framework.
+	 * Note: This test does not work until the full versioning feature is implemented in the testing framework.
 	 *
 	 * @see https://bugs.oliverklee.com/show_bug.cgi?id=2180
 	 */
@@ -213,9 +212,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////////////////////////////
-	// Tests concerning createRecursivePageList
-	/////////////////////////////////////////////
+	/*
+	 * Tests concerning createRecursivePageList
+	 */
 
 	/**
      * @test
@@ -280,7 +279,7 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 		$this->assertSame(
 			$this->sortExplode($uid1 . ',' . $uid2),
 			$this->sortExplode(
-				Tx_Phpunit_Service_Database::createRecursivePageList($uid1.','.$uid2, 0)
+				Tx_Phpunit_Service_Database::createRecursivePageList($uid1 . ',' . $uid2, 0)
 			)
 		);
 	}
@@ -294,7 +293,7 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 		$this->testingFramework->createSystemFolder($subFolderUid);
 
 		$this->assertSame(
-			$this->sortExplode($uid.','.$subFolderUid),
+			$this->sortExplode($uid . ',' . $subFolderUid),
 			$this->sortExplode(Tx_Phpunit_Service_Database::createRecursivePageList($uid, 1))
 		);
 	}
@@ -321,7 +320,7 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 		$subFolderUid2 = $this->testingFramework->createSystemFolder($uid);
 
 		$this->assertSame(
-			$this->sortExplode($uid.','.$subFolderUid1.','.$subFolderUid2),
+			$this->sortExplode($uid . ',' . $subFolderUid1 . ',' . $subFolderUid2),
 			$this->sortExplode(Tx_Phpunit_Service_Database::createRecursivePageList($uid, 1))
 		);
 	}
@@ -337,10 +336,10 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 
 		$this->assertSame(
 			$this->sortExplode(
-				$uid1.','.$uid2.','.$subFolderUid1.','.$subFolderUid2
+				$uid1 . ',' . $uid2 . ',' . $subFolderUid1 . ',' . $subFolderUid2
 			),
 			$this->sortExplode(
-				Tx_Phpunit_Service_Database::createRecursivePageList($uid1.','.$uid2, 1)
+				Tx_Phpunit_Service_Database::createRecursivePageList($uid1 . ',' . $uid2, 1)
 			)
 		);
 	}
@@ -357,7 +356,7 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 			Tx_Phpunit_Service_Database::createRecursivePageList($uid, 0)
 		);
 		$this->assertSame(
-			$this->sortExplode($uid.','.$subFolderUid),
+			$this->sortExplode($uid . ',' . $subFolderUid),
 			$this->sortExplode(Tx_Phpunit_Service_Database::createRecursivePageList($uid, 1))
 		);
 	}
@@ -370,7 +369,7 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 		$subFolderUid = $this->testingFramework->createSystemFolder($uid);
 
 		$this->assertSame(
-			$this->sortExplode($uid.','.$subFolderUid),
+			$this->sortExplode($uid . ',' . $subFolderUid),
 			$this->sortExplode(Tx_Phpunit_Service_Database::createRecursivePageList($uid, 1))
 		);
 		$this->assertSame(
@@ -380,9 +379,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	///////////////////////////////////////
-	// Tests concerning getColumnsInTable
-	///////////////////////////////////////
+	/*
+	 * Tests concerning getColumnsInTable
+	 */
 
 	/**
      * @test
@@ -429,9 +428,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	//////////////////////////////////////////
-	// Tests concerning getColumnDefinition
-	//////////////////////////////////////////
+	/*
+	 * Tests concerning getColumnDefinition
+	 */
 
 	/**
      * @test
@@ -456,9 +455,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	////////////////////////////////////////
-	// Tests regarding tableHasColumnUid()
-	////////////////////////////////////////
+	/*
+	 * Tests regarding tableHasColumnUid()
+	 */
 
 	/**
      * @test
@@ -500,9 +499,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////////////////////
-	// Tests regarding tableHasColumn()
-	/////////////////////////////////////
+	/*
+	 * Tests regarding tableHasColumn()
+	 */
 
 	/**
      * @test
@@ -551,9 +550,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////
-	// Tests for delete
-	/////////////////////
+	/*
+	 * Tests for delete
+	 */
 
 	/**
      * @test
@@ -628,9 +627,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////
-	// Tests for update
-	/////////////////////
+	/*
+	 * Tests for update
+	 */
 
 	/**
      * @test
@@ -706,9 +705,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////
-	// Tests for insert
-	/////////////////////
+	/*
+	 * Tests for insert
+	 */
 
 	/**
      * @test
@@ -783,9 +782,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	//////////////////////////////////////////////////////////
-	// Tests concerning select, selectSingle, selectMultiple
-	//////////////////////////////////////////////////////////
+	/*
+	 * Tests concerning select, selectSingle, selectMultiple
+	 */
 
 	/**
 	 * @test
@@ -1020,9 +1019,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	//////////////////////////////////////
-	// Tests concerning getAllTableNames
-	//////////////////////////////////////
+	/*
+	 * Tests concerning getAllTableNames
+	 */
 
 	/**
      * @test
@@ -1043,9 +1042,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////////////////
-	// Tests concerning existsTable
-	/////////////////////////////////
+	/*
+	 * Tests concerning existsTable
+	 */
 
 	/**
      * @test
@@ -1077,9 +1076,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	////////////////////////////////////
-	// Tests concerning getTcaForTable
-	////////////////////////////////////
+	/*
+	 * Tests concerning getTcaForTable
+	 */
 
 	/**
      * @test
@@ -1142,9 +1141,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	///////////////////////////
-	// Tests concerning count
-	///////////////////////////
+	/*
+	 * Tests concerning count
+	 */
 
 	/**
 	 * @test
@@ -1268,9 +1267,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	/////////////////////////////////
-	// Tests regarding existsRecord
-	/////////////////////////////////
+	/*
+	 * Tests regarding existsRecord
+	 */
 
 	/**
 	 * @test
@@ -1348,9 +1347,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	///////////////////////////////////////////
-	// Tests regarding existsExactlyOneRecord
-	///////////////////////////////////////////
+	/*
+	 * Tests regarding existsExactlyOneRecord
+	 */
 
 	/**
 	 * @test
@@ -1428,9 +1427,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 
-	////////////////////////////////////////
-	// Tests regarding existsRecordWithUid
-	////////////////////////////////////////
+	/*
+	 * Tests regarding existsRecordWithUid
+	 */
 
 	/**
 	 * @test

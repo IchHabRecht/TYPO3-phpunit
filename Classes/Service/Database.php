@@ -104,13 +104,17 @@ class Tx_Phpunit_Service_Database {
 	 *        preview settings which might otherwise disable enableFields.
 	 *
 	 * @return string the WHERE clause starting like " AND ...=... AND ...=..."
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public static function enableFields(
 		$tableName, $showHidden = -1, array $ignoreArray = array(),
 		$noVersionPreview = FALSE
 	) {
 		if (!in_array($showHidden, array(-1, 0, 1))) {
-			throw new InvalidArgumentException('$showHidden may only be -1, 0 or 1, but actually is ' . $showHidden, 1331315445);
+			throw new InvalidArgumentException(
+				'$showHidden may only be -1, 0 or 1, but actually is ' . $showHidden, 1331315445
+			);
 		}
 
 		// maps $showHidden (-1..1) to (0..2) which ensures valid array keys
@@ -169,6 +173,8 @@ class Tx_Phpunit_Service_Database {
 	 * @return string
 	 *         comma-separated list of subpage UIDs including the  UIDs provided
 	 *         in $startPages, will be empty if $startPages is empty
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public static function createRecursivePageList($startPages, $recursionDepth = 0) {
 		if ($recursionDepth < 0) {
@@ -205,9 +211,9 @@ class Tx_Phpunit_Service_Database {
 	}
 
 
-	////////////////////////////////
-	// Wrappers for common queries
-	////////////////////////////////
+	/*
+	 * Wrappers for common queries
+	 */
 
 	/**
 	 * Executes a DELETE query.
@@ -219,6 +225,7 @@ class Tx_Phpunit_Service_Database {
 	 *
 	 * @return integer the number of affected rows, might be 0
 	 *
+	 * @throws InvalidArgumentException
 	 * @throws Tx_Phpunit_Exception_Database if an error has occurred
 	 */
 	public static function delete($tableName, $whereClause) {
@@ -249,6 +256,7 @@ class Tx_Phpunit_Service_Database {
 	 *
 	 * @return integer the number of affected rows, might be 0
 	 *
+	 * @throws InvalidArgumentException
 	 * @throws Tx_Phpunit_Exception_Database if an error has occurred
 	 */
 	public static function update($tableName, $whereClause, array $fields) {
@@ -279,6 +287,7 @@ class Tx_Phpunit_Service_Database {
 	 * @return integer
 	 *         the UID of the created record, will be 0 if the table has no UID column
 	 *
+	 * @throws InvalidArgumentException
 	 * @throws Tx_Phpunit_Exception_Database if an error has occurred
 	 */
 	public static function insert($tableName, array $recordData) {
@@ -318,6 +327,7 @@ class Tx_Phpunit_Service_Database {
 	 *
 	 * @return resource MySQL result pointer
 	 *
+	 * @throws InvalidArgumentException
 	 * @throws Tx_Phpunit_Exception_Database if an error has occurred
 	 */
 	public static function select(
@@ -362,7 +372,6 @@ class Tx_Phpunit_Service_Database {
 	 *
 	 * @return array the single result row, will not be empty
 	 *
-	 * @throws Tx_Phpunit_Exception_Database if an error has occurred
 	 * @throws Tx_Phpunit_Exception_EmptyQueryResult if there is no matching record
 	 */
 	public static function selectSingle(
@@ -538,6 +547,8 @@ class Tx_Phpunit_Service_Database {
 	 *        or be completely empty
 	 *
 	 * @return boolean TRUE if there is a matching record, FALSE otherwise
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public static function existsRecordWithUid(
 		$tableName, $uid, $additionalWhereClause = ''
@@ -552,9 +563,9 @@ class Tx_Phpunit_Service_Database {
 	}
 
 
-	/////////////////////////////////////
-	// Functions concerning table names
-	/////////////////////////////////////
+	/*
+	 * Functions concerning table names
+	 */
 
 	/**
 	 * Returns a list of all table names that are available in the current
@@ -592,6 +603,8 @@ class Tx_Phpunit_Service_Database {
 	 *        the name of the table to check for, must not be empty
 	 *
 	 * @return boolean TRUE if the table $tableName exists, FALSE otherwise
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public static function existsTable($tableName) {
 		if ($tableName == '') {
@@ -604,9 +617,9 @@ class Tx_Phpunit_Service_Database {
 	}
 
 
-	////////////////////////////////////////////////
-	// Functions concerning the columns of a table
-	////////////////////////////////////////////////
+	/*
+	 * Functions concerning the columns of a table
+	 */
 
 	/**
 	 * Gets the column data for a table.
@@ -655,6 +668,8 @@ class Tx_Phpunit_Service_Database {
 	 *        retrieved, must not be empty
 	 *
 	 * @return void
+	 *
+	 * @throws BadMethodCallException
 	 */
 	private static function retrieveColumnsForTable($tableName) {
 		if (!isset(self::$tableColumnCache[$tableName])) {
@@ -703,9 +718,9 @@ class Tx_Phpunit_Service_Database {
 	}
 
 
-	/////////////////////////////////
-	// Functions concerning the TCA
-	/////////////////////////////////
+	/*
+	 * Functions concerning the TCA
+	 */
 
 	/**
 	 * Returns the TCA for a certain table.
@@ -714,6 +729,8 @@ class Tx_Phpunit_Service_Database {
 	 *        the table name to look up, must not be empty
 	 *
 	 * @return array associative array with the TCA description for this table
+	 *
+	 * @throws BadMethodCallException
 	 */
 	public static function getTcaForTable($tableName) {
 		if (isset(self::$tcaCache[$tableName])) {
