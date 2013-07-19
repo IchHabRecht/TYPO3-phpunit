@@ -188,7 +188,7 @@ class Tx_Phpunit_Service_Database {
 		);
 
 		$subPages = array();
-		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbResult)) {
+		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbResult))) {
 			$subPages[] = $row['uid'];
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($dbResult);
@@ -409,7 +409,7 @@ class Tx_Phpunit_Service_Database {
 			$fieldNames, $tableNames, $whereClause, $groupBy, $orderBy, $limit
 		);
 
-		while ($recordData = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbResult)) {
+		while (($recordData = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbResult))) {
 			$result[] = $recordData;
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($dbResult);

@@ -76,9 +76,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function sortExplodeWithEmptyStringReturnsEmptyArray() {
+	 * @test
+	 */
+	public function sortExplodeWithEmptyStringReturnsEmptyArray() {
 		$this->assertSame(
 			array(),
 			$this->sortExplode('')
@@ -86,9 +86,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function sortExplodeWithOneNumberReturnsArrayWithNumber() {
+	 * @test
+	 */
+	public function sortExplodeWithOneNumberReturnsArrayWithNumber() {
 		$this->assertSame(
 			array(42),
 			$this->sortExplode('42')
@@ -96,9 +96,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function sortExplodeWithTwoAscendingNumbersReturnsArrayWithBothNumbers() {
+	 * @test
+	 */
+	public function sortExplodeWithTwoAscendingNumbersReturnsArrayWithBothNumbers() {
 		$this->assertSame(
 			array(1, 2),
 			$this->sortExplode('1,2')
@@ -106,9 +106,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function sortExplodeWithTwoDescendingNumbersReturnsSortedArrayWithBothNumbers() {
+	 * @test
+	 */
+	public function sortExplodeWithTwoDescendingNumbersReturnsSortedArrayWithBothNumbers() {
 		$this->assertSame(
 			array(1, 2),
 			$this->sortExplode('2,1')
@@ -121,25 +121,25 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	//////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function enableFieldsThrowsExceptionForTooSmallShowHidden() {
+	 * @test
+	 */
+	public function enableFieldsThrowsExceptionForTooSmallShowHidden() {
 		$this->setExpectedException('InvalidArgumentException', '$showHidden may only be -1, 0 or 1, but actually is -2');
 		Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', -2);
 	}
 
 	/**
-     * @test
-     */
-    public function enableFieldsThrowsExceptionForTooBigShowHidden() {
+	 * @test
+	 */
+	public function enableFieldsThrowsExceptionForTooBigShowHidden() {
 		$this->setExpectedException('InvalidArgumentException', '$showHidden may only be -1, 0 or 1, but actually is 2');
 		Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', 2);
 	}
 
 	/**
-     * @test
-     */
-    public function enableFieldsIsDifferentForDifferentTables() {
+	 * @test
+	 */
+	public function enableFieldsIsDifferentForDifferentTables() {
 		$this->assertNotEquals(
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test'),
 			Tx_Phpunit_Service_Database::enableFields('pages')
@@ -147,9 +147,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function enableFieldsCanBeDifferentForShowHiddenZeroAndOne() {
+	 * @test
+	 */
+	public function enableFieldsCanBeDifferentForShowHiddenZeroAndOne() {
 		$this->assertNotEquals(
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', 0),
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', 1)
@@ -157,9 +157,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function enableFieldsAreTheSameForShowHiddenZeroAndMinusOne() {
+	 * @test
+	 */
+	public function enableFieldsAreTheSameForShowHiddenZeroAndMinusOne() {
 		$this->assertSame(
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', 0),
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', -1)
@@ -167,9 +167,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function enableFieldsCanBeDifferentForShowHiddenOneAndMinusOne() {
+	 * @test
+	 */
+	public function enableFieldsCanBeDifferentForShowHiddenOneAndMinusOne() {
 		$this->assertNotEquals(
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', 1),
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', -1)
@@ -177,9 +177,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function enableFieldsCanBeDifferentForDifferentIgnores() {
+	 * @test
+	 */
+	public function enableFieldsCanBeDifferentForDifferentIgnores() {
 		$this->assertNotEquals(
 			Tx_Phpunit_Service_Database::enableFields('tx_phpunit_test', 0, array()),
 			Tx_Phpunit_Service_Database::enableFields(
@@ -195,9 +195,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	 * @see https://bugs.oliverklee.com/show_bug.cgi?id=2180
 	 */
 	/**
-     * @test
-     */
-    public function enableFieldsCanBeDifferentForDifferentVersionParameters() {
+	 * @test
+	 */
+	public function enableFieldsCanBeDifferentForDifferentVersionParameters() {
 		$this->markTestSkipped(
 			'This test does not work until the full versioning feature is implemented in the testing framework.'
 		);
@@ -218,9 +218,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	/////////////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListReturnsAnEmptyStringForNoPagesWithDefaultRecursion() {
+	 * @test
+	 */
+	public function createRecursivePageListReturnsAnEmptyStringForNoPagesWithDefaultRecursion() {
 		$this->assertSame(
 			'',
 			Tx_Phpunit_Service_Database::createRecursivePageList('')
@@ -228,9 +228,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListReturnsAnEmptyStringForNoPagesWithZeroRecursion() {
+	 * @test
+	 */
+	public function createRecursivePageListReturnsAnEmptyStringForNoPagesWithZeroRecursion() {
 		$this->assertSame(
 			'',
 			Tx_Phpunit_Service_Database::createRecursivePageList('', 0)
@@ -238,9 +238,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListReturnsAnEmptyStringForNoPagesWithNonZeroRecursion() {
+	 * @test
+	 */
+	public function createRecursivePageListReturnsAnEmptyStringForNoPagesWithNonZeroRecursion() {
 		$this->assertSame(
 			'',
 			Tx_Phpunit_Service_Database::createRecursivePageList('', 1)
@@ -248,18 +248,18 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListThrowsWithNegativeRecursion() {
+	 * @test
+	 */
+	public function createRecursivePageListThrowsWithNegativeRecursion() {
 		$this->setExpectedException('InvalidArgumentException', '$recursionDepth must be >= 0.');
 
 		Tx_Phpunit_Service_Database::createRecursivePageList('', -1);
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListDoesNotContainSubpagesForOnePageWithZeroRecursion() {
+	 * @test
+	 */
+	public function createRecursivePageListDoesNotContainSubpagesForOnePageWithZeroRecursion() {
 		$uid = $this->testingFramework->createSystemFolder();
 		$this->testingFramework->createSystemFolder($uid);
 
@@ -270,9 +270,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListDoesNotContainSubpagesForTwoPagesWithZeroRecursion() {
+	 * @test
+	 */
+	public function createRecursivePageListDoesNotContainSubpagesForTwoPagesWithZeroRecursion() {
 		$uid1 = $this->testingFramework->createSystemFolder();
 		$this->testingFramework->createSystemFolder($uid1);
 		$uid2 = $this->testingFramework->createSystemFolder();
@@ -286,9 +286,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListDoesNotContainSubsubpagesForRecursionOfOne() {
+	 * @test
+	 */
+	public function createRecursivePageListDoesNotContainSubsubpagesForRecursionOfOne() {
 		$uid = $this->testingFramework->createSystemFolder();
 		$subFolderUid = $this->testingFramework->createSystemFolder($uid);
 		$this->testingFramework->createSystemFolder($subFolderUid);
@@ -300,9 +300,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListDoesNotContainUnrelatedPages() {
+	 * @test
+	 */
+	public function createRecursivePageListDoesNotContainUnrelatedPages() {
 		$uid = $this->testingFramework->createSystemFolder();
 		$this->testingFramework->createSystemFolder();
 
@@ -313,9 +313,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListCanContainTwoSubpagesOfOnePage() {
+	 * @test
+	 */
+	public function createRecursivePageListCanContainTwoSubpagesOfOnePage() {
 		$uid = $this->testingFramework->createSystemFolder();
 		$subFolderUid1 = $this->testingFramework->createSystemFolder($uid);
 		$subFolderUid2 = $this->testingFramework->createSystemFolder($uid);
@@ -327,9 +327,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListCanContainSubpagesOfTwoPages() {
+	 * @test
+	 */
+	public function createRecursivePageListCanContainSubpagesOfTwoPages() {
 		$uid1 = $this->testingFramework->createSystemFolder();
 		$uid2 = $this->testingFramework->createSystemFolder();
 		$subFolderUid1 = $this->testingFramework->createSystemFolder($uid1);
@@ -346,9 +346,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListHeedsIncreasingRecursionDepthOnSubsequentCalls() {
+	 * @test
+	 */
+	public function createRecursivePageListHeedsIncreasingRecursionDepthOnSubsequentCalls() {
 		$uid = $this->testingFramework->createSystemFolder();
 		$subFolderUid = $this->testingFramework->createSystemFolder($uid);
 
@@ -363,9 +363,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function createRecursivePageListHeedsDecreasingRecursionDepthOnSubsequentCalls() {
+	 * @test
+	 */
+	public function createRecursivePageListHeedsDecreasingRecursionDepthOnSubsequentCalls() {
 		$uid = $this->testingFramework->createSystemFolder();
 		$subFolderUid = $this->testingFramework->createSystemFolder($uid);
 
@@ -385,9 +385,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	///////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function getColumnsInTableForEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function getColumnsInTableForEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -407,9 +407,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function getColumnsInTableReturnsArrayThatContainsExistingColumn() {
+	 * @test
+	 */
+	public function getColumnsInTableReturnsArrayThatContainsExistingColumn() {
 		$columns = Tx_Phpunit_Service_Database::getColumnsInTable('tx_phpunit_test');
 
 		$this->assertTrue(
@@ -418,9 +418,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function getColumnsInTableReturnsArrayThatNotContainsInexistentColumn() {
+	 * @test
+	 */
+	public function getColumnsInTableReturnsArrayThatNotContainsInexistentColumn() {
 		$columns = Tx_Phpunit_Service_Database::getColumnsInTable('tx_phpunit_test');
 
 		$this->assertFalse(
@@ -434,9 +434,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	//////////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function getColumnDefinitionForEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function getColumnDefinitionForEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -445,9 +445,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function getColumnDefinitionReturnsArrayThatContainsFieldName() {
+	 * @test
+	 */
+	public function getColumnDefinitionReturnsArrayThatContainsFieldName() {
 		$definition = Tx_Phpunit_Service_Database::getColumnDefinition('tx_phpunit_test', 'title');
 
 		$this->assertTrue(
@@ -461,9 +461,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	////////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function tableHasColumnUidForEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function tableHasColumnUidForEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -472,27 +472,27 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function tableHasColumnUidIsTrueOnTableWithColumnUid() {
+	 * @test
+	 */
+	public function tableHasColumnUidIsTrueOnTableWithColumnUid() {
 		$this->assertTrue(
 			Tx_Phpunit_Service_Database::tableHasColumnUid('tx_phpunit_test')
 		);
 	}
 
 	/**
-     * @test
-     */
-    public function tableHasColumnUidIsFalseOnTableWithoutColumnUid() {
+	 * @test
+	 */
+	public function tableHasColumnUidIsFalseOnTableWithoutColumnUid() {
 		$this->assertFalse(
 			Tx_Phpunit_Service_Database::tableHasColumnUid('tx_phpunit_test_article_mm')
 		);
 	}
 
 	/**
-     * @test
-     */
-    public function tableHasColumnUidCanReturnDifferentResultsForDifferentTables() {
+	 * @test
+	 */
+	public function tableHasColumnUidCanReturnDifferentResultsForDifferentTables() {
 		$this->assertNotEquals(
 			Tx_Phpunit_Service_Database::tableHasColumnUid('tx_phpunit_test'),
 			Tx_Phpunit_Service_Database::tableHasColumnUid('tx_phpunit_test_article_mm')
@@ -505,9 +505,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	/////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function tableHasColumnReturnsTrueOnTableWithColumn() {
+	 * @test
+	 */
+	public function tableHasColumnReturnsTrueOnTableWithColumn() {
 		$this->assertTrue(
 			Tx_Phpunit_Service_Database::tableHasColumn(
 				'tx_phpunit_test', 'title'
@@ -516,9 +516,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function tableHasColumnReturnsFalseOnTableWithoutColumn() {
+	 * @test
+	 */
+	public function tableHasColumnReturnsFalseOnTableWithoutColumn() {
 		$this->assertFalse(
 			Tx_Phpunit_Service_Database::tableHasColumn(
 				'tx_phpunit_test', 'inexistent_column'
@@ -527,9 +527,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function tableHasColumnThrowsExceptionOnEmptyTableName() {
+	 * @test
+	 */
+	public function tableHasColumnThrowsExceptionOnEmptyTableName() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -540,9 +540,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function tableHasColumnReturnsFalseOnEmptyColumnName() {
+	 * @test
+	 */
+	public function tableHasColumnReturnsFalseOnEmptyColumnName() {
 		$this->assertFalse(
 			Tx_Phpunit_Service_Database::tableHasColumn(
 				'tx_phpunit_test', ''
@@ -556,9 +556,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	/////////////////////
 
 	/**
-     * @test
-     */
-    public function deleteForEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function deleteForEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -569,9 +569,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function deleteDeletesRecord() {
+	 * @test
+	 */
+	public function deleteDeletesRecord() {
 		$uid = $this->testingFramework->createRecord('tx_phpunit_test');
 
 		Tx_Phpunit_Service_Database::delete(
@@ -586,9 +586,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function deleteForNoDeletedRecordReturnsZero() {
+	 * @test
+	 */
+	public function deleteForNoDeletedRecordReturnsZero() {
 		$this->assertSame(
 			0,
 			Tx_Phpunit_Service_Database::delete(
@@ -598,9 +598,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function deleteForOneDeletedRecordReturnsOne() {
+	 * @test
+	 */
+	public function deleteForOneDeletedRecordReturnsOne() {
 		$uid = $this->testingFramework->createRecord('tx_phpunit_test');
 
 		$this->assertSame(
@@ -612,9 +612,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function deleteForTwoDeletedRecordsReturnsTwo() {
+	 * @test
+	 */
+	public function deleteForTwoDeletedRecordsReturnsTwo() {
 		$uid1 = $this->testingFramework->createRecord('tx_phpunit_test');
 		$uid2 = $this->testingFramework->createRecord('tx_phpunit_test');
 
@@ -633,9 +633,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	/////////////////////
 
 	/**
-     * @test
-     */
-    public function updateForEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function updateForEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -646,9 +646,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function updateChangesRecord() {
+	 * @test
+	 */
+	public function updateChangesRecord() {
 		$uid = $this->testingFramework->createRecord('tx_phpunit_test');
 
 		Tx_Phpunit_Service_Database::update(
@@ -663,9 +663,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function updateForNoChangedRecordReturnsZero() {
+	 * @test
+	 */
+	public function updateForNoChangedRecordReturnsZero() {
 		$this->assertSame(
 			0,
 			Tx_Phpunit_Service_Database::update(
@@ -675,9 +675,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function updateForOneChangedRecordReturnsOne() {
+	 * @test
+	 */
+	public function updateForOneChangedRecordReturnsOne() {
 		$uid = $this->testingFramework->createRecord('tx_phpunit_test');
 
 		$this->assertSame(
@@ -689,9 +689,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function updateForTwoChangedRecordsReturnsTwo() {
+	 * @test
+	 */
+	public function updateForTwoChangedRecordsReturnsTwo() {
 		$uid1 = $this->testingFramework->createRecord('tx_phpunit_test');
 		$uid2 = $this->testingFramework->createRecord('tx_phpunit_test');
 
@@ -711,9 +711,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	/////////////////////
 
 	/**
-     * @test
-     */
-    public function insertForEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function insertForEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -724,9 +724,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function insertForEmptyRecordDataThrowsException() {
+	 * @test
+	 */
+	public function insertForEmptyRecordDataThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', '$recordData must not be empty.'
 		);
@@ -737,9 +737,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function insertInsertsRecord() {
+	 * @test
+	 */
+	public function insertInsertsRecord() {
 		Tx_Phpunit_Service_Database::insert(
 			'tx_phpunit_test', array('title' => 'foo', 'is_dummy_record' => 1)
 		);
@@ -753,9 +753,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function insertForTableWithUidReturnsUidOfCreatedRecord() {
+	 * @test
+	 */
+	public function insertForTableWithUidReturnsUidOfCreatedRecord() {
 		$uid = Tx_Phpunit_Service_Database::insert(
 			'tx_phpunit_test', array('is_dummy_record' => 1)
 		);
@@ -769,9 +769,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function insertForTableWithoutUidReturnsZero() {
+	 * @test
+	 */
+	public function insertForTableWithoutUidReturnsZero() {
 		$this->testingFramework->markTableAsDirty('tx_phpunit_test_article_mm');
 
 		$this->assertSame(
@@ -1043,18 +1043,18 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	//////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function getAllTableNamesContainsExistingTable() {
+	 * @test
+	 */
+	public function getAllTableNamesContainsExistingTable() {
 		$this->assertTrue(
 			in_array('tx_phpunit_test', Tx_Phpunit_Service_Database::getAllTableNames())
 		);
 	}
 
 	/**
-     * @test
-     */
-    public function getAllTableNamesNotContainsInexistentTable() {
+	 * @test
+	 */
+	public function getAllTableNamesNotContainsInexistentTable() {
 		$this->assertFalse(
 			in_array('tx_phpunit_doesnotexist', Tx_Phpunit_Service_Database::getAllTableNames())
 		);
@@ -1066,9 +1066,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	/////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function existsTableWithEmptyTableNameThrowsException() {
+	 * @test
+	 */
+	public function existsTableWithEmptyTableNameThrowsException() {
 		$this->setExpectedException(
 			'InvalidArgumentException', 'The table name must not be empty.'
 		);
@@ -1077,18 +1077,18 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function existsTableForExistingTableReturnsTrue() {
+	 * @test
+	 */
+	public function existsTableForExistingTableReturnsTrue() {
 		$this->assertTrue(
 			Tx_Phpunit_Service_Database::existsTable('tx_phpunit_test')
 		);
 	}
 
 	/**
-     * @test
-     */
-    public function existsTableForInexistentTableReturnsFalse() {
+	 * @test
+	 */
+	public function existsTableForInexistentTableReturnsFalse() {
 		$this->assertFalse(
 			Tx_Phpunit_Service_Database::existsTable('tx_phpunit_doesnotexist')
 		);
@@ -1100,9 +1100,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	////////////////////////////////////
 
 	/**
-     * @test
-     */
-    public function getTcaForTableReturnsValidTcaArray() {
+	 * @test
+	 */
+	public function getTcaForTableReturnsValidTcaArray() {
 		$tca = Tx_Phpunit_Service_Database::getTcaForTable('tx_phpunit_test');
 
 		$this->assertTrue(is_array($tca['ctrl']));
@@ -1135,9 +1135,9 @@ class Tx_Phpunit_Service_DatabaseTest extends tx_phpunit_testcase {
 	}
 
 	/**
-     * @test
-     */
-    public function getTcaForTableThrowsExceptionOnTableWithoutTca() {
+	 * @test
+	 */
+	public function getTcaForTableThrowsExceptionOnTableWithoutTca() {
 		$this->setExpectedException(
 			'BadMethodCallException', 'The table "tx_phpunit_test_article_mm" has no TCA.'
 		);

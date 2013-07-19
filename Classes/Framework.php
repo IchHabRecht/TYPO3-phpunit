@@ -908,7 +908,7 @@ class Tx_Phpunit_Framework {
 				);
 			}
 			$zip->addFile($pathToFile, $this->getPathRelativeToUploadDirectory($pathToFile));
-        }
+		}
 
 		$zip->close();
 		$this->addToDummyFileList($uniqueFileName);
