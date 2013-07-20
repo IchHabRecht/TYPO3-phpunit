@@ -1479,8 +1479,6 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		);
 
 		$classNamesThatMightNotExist = array(
-			'extbase selenium base test class (before 6.0)' => array('Tx_Extbase_SeleniumBaseTestCase'),
-			'extbase selenium base test class (since 6.0)' => array('\\TYPO3\\CMS\\Extbase\\Tests\\SeleniumBaseTestCase'),
 			'extbase base test class (before 1.3)' => array('Tx_Extbase_BaseTestCase'),
 			'extbase base test class (1.3-4.7)' => array('Tx_Extbase_Tests_Unit_BaseTestCase'),
 			'extbase unit base test class (since 6.0)' => array('TYPO3\\CMS\\Extbase\\Tests\\Unit\\BaseTestCase'),
@@ -1489,6 +1487,14 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 			'Core unit base test class (since 6.0)' => array('TYPO3\\CMS\\Core\\Tests\\UnitTestCase'),
 			'Core functional base test class (since 6.0)' => array('TYPO3\\CMS\\Core\\Tests\\FunctionalTestCase'),
 		);
+		// Only add the Selenium test cases if the class PHPUnit_Extensions_Selenium2TestCase is available
+		// This might fail with own PHPUnit composer installation without the phpunit-selenium package
+		if (class_exists('PHPUnit_Extensions_Selenium2TestCase', TRUE)) {
+			array_unshift($classNamesThatMightNotExist, array(
+				'extbase selenium base test class (before 6.0)' => array('Tx_Extbase_SeleniumBaseTestCase'),
+				'extbase selenium base test class (since 6.0)' => array('\\TYPO3\\CMS\\Extbase\\Tests\\SeleniumBaseTestCase')
+			));
+		}
 		foreach ($classNamesThatMightNotExist as $key => $className) {
 			if (class_exists($className[0], TRUE)) {
 				$invalidClassNames[$key] = $className;
