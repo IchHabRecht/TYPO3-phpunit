@@ -22,31 +22,8 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * With this TestRunner you can run PHPUnit manually from the command line.
- *
- * @package TYPO3
- * @subpackage tx_phpunit
- *
- * @author Helmut Hummel <helmut.hummel@typo3.org>
- */
-class Tx_Phpunit_TestRunner_CliTestRunner extends Tx_Phpunit_TestRunner_AbstractCliTestRunner {
-	/**
-	 * Runs PHPUnit
-	 *
-	 * @return void
-	 */
-	public function run() {
-		require_once('PHPUnit/Autoload.php');
-		/**
-		 * @var string
-		 */
-		define('PHPUnit_MAIN_METHOD', 'PHPUnit_TextUI_Command::main');
-		PHPUnit_TextUI_Command::main();
-	}
-}
-
 /* @var $phpUnit Tx_Phpunit_TestRunner_CliTestRunner */
 $phpUnit = t3lib_div::makeInstance('Tx_Phpunit_TestRunner_CliTestRunner');
 $phpUnit->run();
+
 ?>

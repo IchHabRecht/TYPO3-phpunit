@@ -21,28 +21,29 @@
  *
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 /**
- * This class runs PHPUnit in CLI mode, and includes the
- * PHP boot script of an IDE.
+ * With this TestRunner you can run PHPUnit manually from the command line.
  *
  * @package TYPO3
  * @subpackage tx_phpunit
  *
  * @author Helmut Hummel <helmut.hummel@typo3.org>
  */
-class Tx_Phpunit_TestRunner_IdeTestRunner extends Tx_Phpunit_TestRunner_AbstractCliTestRunner {
+class Tx_Phpunit_TestRunner_CliTestRunner extends Tx_Phpunit_TestRunner_AbstractCliTestRunner {
 	/**
-	 * Additional help text for the command line
+	 * Runs PHPUnit
 	 *
-	 * @var array
+	 * @return void
 	 */
-	protected $additionalHelp = array(
-		'name' => 'Tx_Phpunit_TestRunner_IdeTestRunner',
-		'synopsis' => 'phpunit_ide_testrunner <test or test folder> ###OPTIONS###',
-		'description' => 'This script should only be run through an IDE',
-		'examples' => '',
-		'author' => '(c) 2012 Helmut Hummel <helmut.hummel@typo3.org>',
-	);
+	public function run() {
+		require_once('PHPUnit/Autoload.php');
+		/**
+		 * @var string
+		 */
+		define('PHPUnit_MAIN_METHOD', 'PHPUnit_TextUI_Command::main');
+		PHPUnit_TextUI_Command::main();
+	}
 }
 
 ?>

@@ -10,7 +10,7 @@ return array(
 	'tx_phpunit_backend_teststatistics' => $extensionPath . 'Classes/BackEnd/TestStatistics.php',
 	'tx_phpunit_testrunner_abstractclitestrunner' => $extensionPath . 'Classes/TestRunner/AbstractCliTestRunner.php',
 	'tx_phpunit_testrunner_idetestrunner' => $extensionPath . 'Classes/TestRunner/IdeTestRunner.php',
-	'tx_phpunit_testrunner_manualclitestrunner' => $extensionPath . 'Classes/TestRunner/ManualCliTestRunner.php',
+	'tx_phpunit_testrunner_clitestrunner' => $extensionPath . 'Classes/TestRunner/CliTestRunner.php',
 	'tx_phpunit_database_testcase' => $extensionPath . 'Classes/Database/TestCase.php',
 	'tx_phpunit_exception_database' => $extensionPath . 'Classes/Exception/Database.php',
 	'tx_phpunit_exception_emptyqueryresult' => $extensionPath . 'Classes/Exception/EmptyQueryResult.php',
