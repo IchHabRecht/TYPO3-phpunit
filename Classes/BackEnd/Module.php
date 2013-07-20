@@ -379,7 +379,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 		}
 
 		$testsPathOfExtension = $this->testFinder->getTestableForKey($extensionKey)->getTestsPath();
-		$testSuites = $this->testFinder->findTestCaseFilesDirectory($testsPathOfExtension);
+		$testSuites = $this->testFinder->findTestCaseFilesInDirectory($testsPathOfExtension);
 
 		foreach ($testSuites as $fileName) {
 			require_once($testsPathOfExtension . $fileName);
@@ -436,7 +436,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 		$testSuite = new PHPUnit_Framework_TestSuite('tx_phpunit_basetestsuite');
 
 		$testsPathOfExtension = $this->testFinder->getTestableForKey($extensionKey)->getTestsPath();
-		$testSuites = $this->testFinder->findTestCaseFilesDirectory($testsPathOfExtension);
+		$testSuites = $this->testFinder->findTestCaseFilesInDirectory($testsPathOfExtension);
 
 		foreach ($testSuites as $fileName) {
 			require_once($testsPathOfExtension . $fileName);
@@ -556,6 +556,8 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	 * @return void
 	 */
 	protected function renderRunningTest() {
+		$this->initErrorHandler();
+
 		$selectedTestableKey = $this->getAndSaveSelectedTestableKey();
 		$this->renderTestingHeader($selectedTestableKey);
 
@@ -594,6 +596,16 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 		if ($this->shouldCollectCodeCoverageInformation()) {
 			$this->renderCodeCoverage();
 		}
+	}
+
+	/**
+	 * Initializes the PHPUnit error handler to catch all errors.
+	 *
+	 * @return void
+	 */
+	protected function initErrorHandler() {
+		// Enforce PHPUnit error handler
+		set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'), E_ALL | E_STRICT);
 	}
 
 	/**
@@ -653,7 +665,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	 */
 	protected function loadAllFilesContainingTestCasesForSingleTestable(Tx_Phpunit_Testable $testable) {
 		$testsPath = $testable->getTestsPath();
-		$testCaseFileNames = $this->testFinder->findTestCaseFilesDirectory($testsPath);
+		$testCaseFileNames = $this->testFinder->findTestCaseFilesInDirectory($testsPath);
 		foreach ($testCaseFileNames as $testCaseFileName) {
 			require_once(realpath($testsPath . $testCaseFileName));
 		}
@@ -952,7 +964,7 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 			return array();
 		}
 
-		$testCaseFileNames = $this->testFinder->findTestCaseFilesDirectory($directory);
+		$testCaseFileNames = $this->testFinder->findTestCaseFilesInDirectory($directory);
 
 		$extensionsArr = array();
 		if (!empty($testCaseFileNames)) {
