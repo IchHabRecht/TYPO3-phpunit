@@ -556,6 +556,8 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 	 * @return void
 	 */
 	protected function renderRunningTest() {
+		$this->initErrorHandler();
+
 		$selectedTestableKey = $this->getAndSaveSelectedTestableKey();
 		$this->renderTestingHeader($selectedTestableKey);
 
@@ -594,6 +596,16 @@ class Tx_Phpunit_BackEnd_Module extends t3lib_SCbase {
 		if ($this->shouldCollectCodeCoverageInformation()) {
 			$this->renderCodeCoverage();
 		}
+	}
+
+	/**
+	 * Initializes the PHPUnit error handler to catch all errors.
+	 *
+	 * @return void
+	 */
+	protected function initErrorHandler() {
+		// Enforce PHPUnit error handler
+		set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'), E_ALL | E_STRICT);
 	}
 
 	/**
