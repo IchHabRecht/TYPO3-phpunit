@@ -20,6 +20,7 @@ unset($extensionSettingsService);
 define(TX_PHPUNITLIB_EXTPATH, $composerPhpUnitPath);
 set_include_path(TX_PHPUNITLIB_EXTPATH . PATH_SEPARATOR . get_include_path());
 unset($composerPhpUnitPath);
+require_once(TX_PHPUNITLIB_EXTPATH . 'PHPUnit/Autoload.php');
 
 $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['Tx_Phpunit_BackEnd_Ajax']
 	= 'typo3conf/ext/phpunit/Classes/BackEnd/Ajax.php:Tx_Phpunit_BackEnd_Ajax->ajaxBroker';
