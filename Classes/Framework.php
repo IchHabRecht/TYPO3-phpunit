@@ -1096,6 +1096,7 @@ class Tx_Phpunit_Framework {
 		}
 
 		$this->uploadFolderPath = $absolutePath;
+		$this->dummyFolders['uploadFolder'] = $absolutePath;
 	}
 
 	/**
