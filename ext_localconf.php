@@ -12,13 +12,17 @@ $composerPhpUnitPath = t3lib_extMgm::extPath('phpunit') . 'Composer/vendor/phpun
 if ($extensionSettingsService->hasString('phpunitlib')) {
 	$userPhpUnitPath = rtrim(t3lib_div::fixWindowsFilePath($extensionSettingsService->getAsString('phpunitlib')), '/');
 	if (is_dir($userPhpUnitPath . '/PHPUnit')) {
-		$composerPhpUnitPath = $userPhpUnitPath . '/';
+		if (is_file($userPhpUnitPath . '/PHPUnit/Autoload.php')) {
+			$composerPhpUnitPath = $userPhpUnitPath . '/';
+			if (set_include_path($composerPhpUnitPath . PATH_SEPARATOR . get_include_path() !== FALSE)) {
+				require_once($composerPhpUnitPath . 'PHPUnit/Autoload.php');
+			}
+		}
 	}
 }
 unset($extensionSettingsService);
 
 define(TX_PHPUNITLIB_EXTPATH, $composerPhpUnitPath);
-set_include_path(TX_PHPUNITLIB_EXTPATH . PATH_SEPARATOR . get_include_path());
 unset($composerPhpUnitPath);
 
 $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['Tx_Phpunit_BackEnd_Ajax']
