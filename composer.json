@@ -1,0 +1,8 @@
+{
+	"require": {
+		"typo3-ci/typo3cms": "dev-master"
+	},
+
+		"minimum-stability": "dev"
+
+}
