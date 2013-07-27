@@ -1,0 +1,34 @@
+{namespace e=Tx_Phpunit_ViewHelpers}
+{f:layout(name:'Jasmine')}
+<f:section name="main">
+	<f:if condition="{extensionList}">
+		<f:form action="index" controller="Jasmine" method="post" class="tx_phpunit_jasmine_selectionForm">
+
+			<f:form.hidden name="controller" value="Jasmine" />
+			<f:form.hidden name="action" value="index" />
+
+			<input type="hidden" name="M" value="{M}" />
+
+			<div class="tx_phpunit_jasmine_form_row">
+				<label>Extension to test:</label>
+				<e:form.selectWithIcon name="extensionKey" optionLabelField="name" optionValueField="extensionKey" options="{extensionList}" value="{arguments.extensionKey}" />
+			</div>
+
+			<div class="tx_phpunit_jasmine_form_row">
+				<f:form.submit value="Run" />
+			</div>
+
+		</f:form>
+
+		<div id="jasmine-test-results"></div>
+
+		<f:if condition="{execute}">
+			<script type="text/javascript">
+				jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+				jasmine.getEnv().execute();
+
+				console.log(jasmine.getEnv());
+			</script>
+		</f:if>
+	</f:if>
+</f:section>

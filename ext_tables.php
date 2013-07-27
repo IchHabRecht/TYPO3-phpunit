@@ -30,4 +30,20 @@ if (TYPO3_MODE === 'BE') {
 	t3lib_extMgm::addModule('tools', 'txphpunitbeM1', '', t3lib_extMgm::extPath($_EXTKEY) . 'Classes/BackEnd/');
 
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['PHPUnit'][] = 'Tx_Phpunit_Reports_Status';
+
+		// Add Jasmine module
+	Tx_Extbase_Utility_Extension::registerModule(
+		$_EXTKEY,
+		'tools',
+		'jasmine',
+		'',
+		array(
+			'Jasmine' => 'info,index',
+		),
+		array(
+			'access' => 'user,group',
+			'icon'   => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/Jasmine.gif',
+			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_mod_jasmine.xml',
+		)
+	);
 }

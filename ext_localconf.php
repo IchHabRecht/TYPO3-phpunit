@@ -33,4 +33,17 @@ if (TYPO3_MODE === 'BE') {
 		'EXT:' . $_EXTKEY . '/Scripts/IdeTestRunner.php',
 		'_CLI_phpunit',
 	);
+	if (method_exists(t3lib_extMgm, 'registerExtDirectComponent')) {
+		t3lib_extMgm::registerExtDirectComponent(
+			'TYPO3.Phpunit.JasmineExtDirect',
+			t3lib_extMgm::extPath($_EXTKEY) . 'Classes/Service/Jasmine/ExtDirectService.php:Tx_Phpunit_Service_Jasmine_ExtDirectService'
+		);
+	} else {
+		/**
+		 * Old style of ExtDirect registration. Can be dropped if the minimum
+		 * TYPO3 version required for tx_phpunit would ever be 4.6 or higer
+		 */
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect']['TYPO3.Phpunit.JasmineExtDirect'] =
+			t3lib_extMgm::extPath($_EXTKEY) . 'Classes/Service/Jasmine/ExtDirectService.php:Tx_Phpunit_Service_Jasmine_ExtDirectService';
+	}
 }
