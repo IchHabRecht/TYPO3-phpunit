@@ -24,6 +24,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'state' => 'stable',
 	'uploadfolder' => 1,
 	'createDirs' => '',
+	'createDirs' => 'typo3temp/tx_phpunit/jasmine/',
 	'modify_tables' => '',
 	'clearcacheonload' => 0,
 	'lockType' => '',
