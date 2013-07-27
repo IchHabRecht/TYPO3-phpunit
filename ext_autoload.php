@@ -37,6 +37,8 @@ return array(
 	'tx_phpunit_viewhelpers_abstractselectorviewhelper' => $extensionPath . '/Classes/ViewHelpers/AbstractSelectorViewHelper.php',
 	'tx_phpunit_viewhelpers_abstractviewhelper' => $extensionPath . 'Classes/ViewHelpers/AbstractViewHelper.php',
 	'tx_phpunit_viewhelpers_extensionselectorviewhelper' => $extensionPath . 'Classes/ViewHelpers/ExtensionSelectorViewHelper.php',
-	'tx_phpunit_viewhelpers_progressbarviewhelper' => $extensionPath . 'Classes/ViewHelpers/ProgressBarViewHelper.php'
+	'tx_phpunit_viewhelpers_progressbarviewhelper' => $extensionPath . 'Classes/ViewHelpers/ProgressBarViewHelper.php',
+	'tx_phpunit_service_jasmine_specrunnerwriterservice' => $extensionPath . 'Classes/Service/Jasmine/SpecRunnerWriterService.php',
+	'tx_phpunit_service_jasmine_testfinderservice' => $extensionPath . 'Classes/Service/Jasmine/TestFinderService.php'
 );
 ?>
