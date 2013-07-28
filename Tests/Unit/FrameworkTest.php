@@ -3564,7 +3564,6 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
      */
     public function deleteDummyFileWithInexistentFileThrowsException() {
 		$uniqueFileName = $this->fixture->getUniqueFileOrFolderPath('test.txt');
-
 		$this->fixture->deleteDummyFile(basename($uniqueFileName));
 	}
 
@@ -3591,7 +3590,6 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
      */
     public function createDummyFolderCreatesFolder() {
 		$dummyFolder = $this->fixture->createDummyFolder('test_folder');
-
 		$this->assertTrue(is_dir($dummyFolder));
 	}
 
