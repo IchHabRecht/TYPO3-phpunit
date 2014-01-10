@@ -279,10 +279,16 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 * @return void
 	 */
 	protected function importStdDb() {
-		$sqlFilename = t3lib_div::getFileAbsFileName(PATH_t3lib . 'stddb/tables.sql');
-		$fileContent = t3lib_div::getUrl($sqlFilename);
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+			/** @var \TYPO3\CMS\Install\Service\SqlExpectedSchemaService $sqlExpectedSchemaService */
+			$sqlExpectedSchemaService = t3lib_div::makeInstance('TYPO3\\CMS\\Install\\Service\\SqlExpectedSchemaService');
+			$databaseDefinitions = $sqlExpectedSchemaService->getTablesDefinitionString(TRUE);
+		} else {
+			$sqlFilename = t3lib_div::getFileAbsFileName(PATH_t3lib . 'stddb/tables.sql');
+			$databaseDefinitions = t3lib_div::getUrl($sqlFilename);
+		}
 
-		$this->importDatabaseDefinitions($fileContent);
+		$this->importDatabaseDefinitions($databaseDefinitions);
 
 		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
 			// make sure missing caching framework tables do not get into the way
