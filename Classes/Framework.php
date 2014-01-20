@@ -1323,7 +1323,7 @@ class Tx_Phpunit_Framework {
 		// Instead of passing the actual user data to createUserSession, we
 		// pass an empty array to improve performance (e.g. no session record
 		// will be written to the database).
-		$GLOBALS['TSFE']->fe_user->createUserSession(array());
+		$GLOBALS['TSFE']->fe_user->createUserSession(array('uid' => 1));
 		$GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->getRawUserByUid($userId);
 		$GLOBALS['TSFE']->fe_user->fetchGroupData();
 		$GLOBALS['TSFE']->loginUser = 1;
