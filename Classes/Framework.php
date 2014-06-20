@@ -1139,7 +1139,7 @@ class Tx_Phpunit_Framework {
 	}
 
 	/**
-	 * Returns a unique absolut path of a file or folder.
+	 * Returns a unique absolute path of a file or folder.
 	 *
 	 * @param string $path
 	 *        the path of a file or folder relative to the calling extension's
@@ -1208,10 +1208,11 @@ class Tx_Phpunit_Framework {
 		$frontEnd->determineId();
 		$frontEnd->initTemplate();
 		$frontEnd->config = array();
+		$frontEnd->page = array();
 
 		$frontEnd->tmpl->getFileName_backPath = PATH_site;
 
-		if (($pageUid > 0) && in_array('sys_template', $this->dirtySystemTables)) {
+		if (($pageUid > 0) && in_array('sys_template', $this->dirtySystemTables, TRUE)) {
 			$frontEnd->tmpl->runThroughTemplates($frontEnd->sys_page->getRootLine($pageUid), 0);
 			$frontEnd->tmpl->generateConfig();
 			$frontEnd->tmpl->loaded = 1;
@@ -1226,7 +1227,7 @@ class Tx_Phpunit_Framework {
 		$this->hasFakeFrontEnd = TRUE;
 		$this->logoutFrontEndUser();
 
-		return $GLOBALS['TSFE']->id;
+		return $frontEnd->id;
 	}
 
 	/**
