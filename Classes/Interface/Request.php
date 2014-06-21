@@ -32,6 +32,11 @@
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  */
 interface Tx_Phpunit_Interface_Request extends Tx_Phpunit_Interface_ConvertService {
+
+	/**
+	 * @var string
+	 */
+	const PARAMETER_MODULENAME = 'tools_txphpunitbeM1';
 	/**
 	 * @var string
 	 */
