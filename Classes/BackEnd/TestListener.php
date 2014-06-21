@@ -540,7 +540,11 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 				'[' . Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']' => $this->createTestId($test),
 		);
 
-		return htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('tools_txphpunitbeM1', $urlParameters));
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6020000) {
+			return htmlspecialchars('mod.php?M=tools_txphpunitbeM1' . t3lib_div::implodeArrayForUrl('', $urlParameters, '', TRUE, TRUE));
+		} else {
+			return htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('tools_txphpunitbeM1', $urlParameters));
+		}
 	}
 
 	/**
