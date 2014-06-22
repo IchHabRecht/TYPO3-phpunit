@@ -235,6 +235,8 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 		);
 		$this->outputService->flushOutputBuffer();
 	}
+	
+	public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time) {}
 
 	/**
 	 * A test has failed.
