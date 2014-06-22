@@ -127,7 +127,7 @@ class DirectoryIterationTestCase extends vfsStreamWrapperBaseTestCase
 
         $this->assertDirectoryCount(count($expectedDirectories), $i);
 
-        rewind($handle);
+        rewinddir($handle);
         $i   = 0;
         while (false !== ($entry = readdir($handle))) {
             $i++;
@@ -225,5 +225,94 @@ class DirectoryIterationTestCase extends vfsStreamWrapperBaseTestCase
         $this->assertEquals(2, count($list1));
         $this->assertEquals(2, count($list2));
     }
+
+    /**
+     * @test
+     * @group  issue_50
+     */
+    public function recursiveDirectoryIterationWithDotsEnabled()
+    {
+        vfsStream::enableDotfiles();
+        vfsStream::setup();
+        $structure = array(
+          'Core' => array(
+            'AbstractFactory' => array(
+              'test.php'    => 'some text content',
+              'other.php'   => 'Some more text content',
+              'Invalid.csv' => 'Something else',
+             ),
+            'AnEmptyFolder'   => array(),
+            'badlocation.php' => 'some bad content',
+          )
+        );
+        $root     = vfsStream::create($structure);
+        $rootPath = vfsStream::url($root->getName());
+
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath),
+                                                   \RecursiveIteratorIterator::CHILD_FIRST);
+        $pathes = array();
+        foreach ($iterator as $fullFileName => $fileSPLObject) {
+            $pathes[] = $fullFileName;
+        }
+
+        $this->assertEquals(array('vfs://root'.DIRECTORY_SEPARATOR.'.',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'..',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'.',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'..',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'.',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'..',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'test.php',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'other.php',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'Invalid.csv',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AnEmptyFolder'.DIRECTORY_SEPARATOR.'.',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AnEmptyFolder'.DIRECTORY_SEPARATOR.'..',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AnEmptyFolder',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'badlocation.php',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'
+                            ),
+                            $pathes
+        );
+    }
+
+    /**
+     * @test
+     * @group  issue_50
+     */
+    public function recursiveDirectoryIterationWithDotsDisabled()
+    {
+        vfsStream::disableDotfiles();
+        vfsStream::setup();
+        $structure = array(
+          'Core' => array(
+            'AbstractFactory' => array(
+              'test.php'    => 'some text content',
+              'other.php'   => 'Some more text content',
+              'Invalid.csv' => 'Something else',
+             ),
+            'AnEmptyFolder'   => array(),
+            'badlocation.php' => 'some bad content',
+          )
+        );
+        $root     = vfsStream::create($structure);
+        $rootPath = vfsStream::url($root->getName());
+
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath),
+                                                   \RecursiveIteratorIterator::CHILD_FIRST);
+        $pathes = array();
+        foreach ($iterator as $fullFileName => $fileSPLObject) {
+            $pathes[] = $fullFileName;
+        }
+
+        $this->assertEquals(array('vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'test.php',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'other.php',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory'.DIRECTORY_SEPARATOR.'Invalid.csv',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AbstractFactory',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'AnEmptyFolder',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'.DIRECTORY_SEPARATOR.'badlocation.php',
+                                  'vfs://root'.DIRECTORY_SEPARATOR.'Core'
+                            ),
+                            $pathes
+        );
+    }
 }
-?>
