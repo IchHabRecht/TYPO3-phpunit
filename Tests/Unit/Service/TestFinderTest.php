@@ -636,8 +636,9 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getLoadedExtensionKeysReturnsKeysOfLoadedExtensions() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6000000) {
-			$this->markTestSkipped('This test is available in TYPO3 6.0 and above.');
+		$version = t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version);
+		if ($version < 6000000 || $version >= 6002000) {
+			$this->markTestSkipped('This test is available in TYPO3 6.0 and 6.1.');
 		}
 
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extListArray'] = array('bar');
@@ -670,6 +671,10 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getLoadedExtensionKeysReturnsKeysOfRequiredExtensions() {
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6000000) {
+			$this->markTestSkipped('This test is available in TYPO3 below version 6.0.');
+		}
+
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extList'] = '';
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = 'foo';
 
@@ -699,6 +704,9 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		if (!method_exists('t3lib_extMgm', 'getLoadedExtensionListArray')) {
 			$this->markTestSkipped('This test is available in TYPO3 6.0 and above.');
 		}
+		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+			$this->markTestSkipped('This test is available in TYPO3 below version 6.2.');
+		}
 
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extListArray'] = array('foo');
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = array('foo');
@@ -724,6 +732,13 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 			array('foo'),
 			array_filter($this->subject->getLoadedExtensionKeys(), array($this, 'keepOnlyFooElements'))
 		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getLoadedExtensionKeysReturnsPhpunitKey() {
+		$this->assertArrayHasKey('phpunit', array_flip($this->subject->getLoadedExtensionKeys()));
 	}
 
 	/**
