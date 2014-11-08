@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * This file is part of the TYPO3 CMS project.
  *
@@ -54,7 +54,7 @@ class Tx_Phpunit_Service_DatabaseTest extends Tx_PhpUnit_TestCase {
 			return array();
 		}
 
-		$numbers = t3lib_div::intExplode(',', $valueList);
+		$numbers = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $valueList);
 		sort($numbers, SORT_NUMERIC);
 
 		return ($numbers);
@@ -782,7 +782,7 @@ class Tx_Phpunit_Service_DatabaseTest extends Tx_PhpUnit_TestCase {
 	 * @test
 	 */
 	public function selectReturnsResource() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6001000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6001000) {
 			$this->markTestSkipped('This test only applies to TYPO3 CMS < 6.1.');
 		}
 
@@ -795,7 +795,7 @@ class Tx_Phpunit_Service_DatabaseTest extends Tx_PhpUnit_TestCase {
 	 * @test
 	 */
 	public function selectReturnsMySqliResult() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6001000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6001000) {
 			$this->markTestSkipped('This test is available in TYPO3 6.1 and above.');
 		}
 
@@ -1100,7 +1100,7 @@ class Tx_Phpunit_Service_DatabaseTest extends Tx_PhpUnit_TestCase {
 	 * @test
 	 */
 	public function getTcaForTableCanLoadFieldsAddedByExtensions() {
-		if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('sr_feuser_register')) {
 			$this->markTestSkipped(
 				'This test is only applicable if sr_feuser_register is loaded.'
 			);

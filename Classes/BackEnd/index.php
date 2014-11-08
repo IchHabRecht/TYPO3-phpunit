@@ -30,7 +30,7 @@ if (!defined('PATH_tslib')) {
 	/**
 	 * @var string
 	 */
-	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
+	define('PATH_tslib', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('cms') . 'tslib/');
 }
 
 $GLOBALS['LANG']->includeLLFile('EXT:phpunit/Resources/Private/Language/locallang_backend.xml');
@@ -38,35 +38,35 @@ $GLOBALS['LANG']->includeLLFile('EXT:phpunit/Resources/Private/Language/locallan
 $namePrettifier = new PHPUnit_Util_TestDox_NamePrettifier();
 
 /** @var $outputService Tx_Phpunit_Service_OutputService */
-$outputService = t3lib_div::makeInstance('Tx_Phpunit_Service_OutputService');
+$outputService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_OutputService');
 
 /** @var $userSettingsService Tx_Phpunit_Service_UserSettingsService */
-$userSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_UserSettingsService');
+$userSettingsService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_UserSettingsService');
 
 /** @var $testListener Tx_Phpunit_BackEnd_TestListener */
-$testListener = t3lib_div::makeInstance('Tx_Phpunit_BackEnd_TestListener');
+$testListener = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_BackEnd_TestListener');
 $testListener->injectNamePrettifier($namePrettifier);
 $testListener->injectOutputService($outputService);
 
 /** @var $extensionSettingsService Tx_Phpunit_Service_ExtensionSettingsService */
-$extensionSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_ExtensionSettingsService');
+$extensionSettingsService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_ExtensionSettingsService');
 
 /** @var $userSettingsService Tx_Phpunit_Service_UserSettingsService */
-$userSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_UserSettingsService');
+$userSettingsService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_UserSettingsService');
 
 /** @var $testCaseService Tx_Phpunit_Service_TestCaseService */
-$testCaseService = t3lib_div::makeInstance('Tx_Phpunit_Service_TestCaseService');
+$testCaseService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_TestCaseService');
 $testCaseService->injectUserSettingsService($userSettingsService);
 
 /** @var $testFinder Tx_Phpunit_Service_TestFinder */
-$testFinder = t3lib_div::makeInstance('Tx_Phpunit_Service_TestFinder');
+$testFinder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_TestFinder');
 $testFinder->injectExtensionSettingsService($extensionSettingsService);
 
 /** @var $request Tx_Phpunit_BackEnd_Request */
-$request = t3lib_div::makeInstance('Tx_Phpunit_BackEnd_Request');
+$request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_BackEnd_Request');
 
 /** @var $module Tx_Phpunit_BackEnd_Module */
-$module = t3lib_div::makeInstance('Tx_Phpunit_BackEnd_Module');
+$module = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_BackEnd_Module');
 $module->injectRequest($request);
 $module->injectOutputService($outputService);
 $module->injectUserSettingsService($userSettingsService);

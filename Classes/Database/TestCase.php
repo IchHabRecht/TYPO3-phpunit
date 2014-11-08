@@ -67,7 +67,7 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 		$success = TRUE;
 
 		$this->dropDatabase();
-		/** @var $db t3lib_DB */
+		/** @var $db \TYPO3\CMS\Core\Database\DatabaseConnection */
 		$db = $GLOBALS['TYPO3_DB'];
 		$databaseNames = $db->admin_get_dbs();
 		$this->switchToOriginalTypo3Database($db);
@@ -87,7 +87,7 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 * @return void
 	 */
 	protected function cleanDatabase() {
-		/** @var $db t3lib_DB */
+		/** @var $db \TYPO3\CMS\Core\Database\DatabaseConnection */
 		$db = $GLOBALS['TYPO3_DB'];
 		$databaseNames = $db->admin_get_dbs();
 		$this->switchToOriginalTypo3Database($db);
@@ -111,7 +111,7 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 *         TRUE if the database has been dropped successfully, FALSE otherwise
 	 */
 	protected function dropDatabase() {
-		/** @var $db t3lib_DB */
+		/** @var $db \TYPO3\CMS\Core\Database\DatabaseConnection */
 		$db = $GLOBALS['TYPO3_DB'];
 		$databaseNames = $db->admin_get_dbs();
 		$this->switchToOriginalTypo3Database($db);
@@ -134,10 +134,10 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 *        the name of the test database to use; if none is provided, the
 	 *        name of the current TYPO3 database plus a suffix "_test" is used
 	 *
-	 * @return t3lib_DB the test database
+	 * @return \TYPO3\CMS\Core\Database\DatabaseConnection the test database
 	 */
 	protected function useTestDatabase($databaseName = NULL) {
-		/** @var $db t3lib_DB */
+		/** @var $db \TYPO3\CMS\Core\Database\DatabaseConnection */
 		$db = $GLOBALS['TYPO3_DB'];
 
 		if ($this->selectDatabase($databaseName ? $databaseName : $this->testDatabase, $db) !== TRUE) {
@@ -151,12 +151,12 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 * Selects the database depending on TYPO3 version.
 	 *
 	 * @param string $databaseName the name of the database to select
-	 * @param t3lib_DB $database database object to process the change
+	 * @param \TYPO3\CMS\Core\Database\DatabaseConnection $database database object to process the change
 	 *
 	 * @return boolean
 	 */
-	protected function selectDatabase($databaseName, t3lib_DB $database) {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6001000) {
+	protected function selectDatabase($databaseName, \TYPO3\CMS\Core\Database\DatabaseConnection $database) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6001000) {
 			$result = $database->sql_select_db($databaseName);
 		} else {
 			$database->setDatabaseName($databaseName);
@@ -196,7 +196,7 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 		$this->useTestDatabase();
 
 		foreach ($extensions as $extensionName) {
-			if (!t3lib_extMgm::isLoaded($extensionName)) {
+			if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionName)) {
 				$this->markTestSkipped(
 					'This test is skipped because the extension ' . $extensionName .
 						' which was marked for import is not loaded on your system!'
@@ -222,8 +222,8 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 		// hook to load additional files
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['phpunit']['importExtensions_additionalDatabaseFiles'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['phpunit']['importExtensions_additionalDatabaseFiles'] as $file) {
-				$sqlFilename = t3lib_div::getFileAbsFileName($file);
-				$fileContent = t3lib_div::getUrl($sqlFilename);
+				$sqlFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($file);
+				$fileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($sqlFilename);
 
 				$this->importDatabaseDefinitions($fileContent);
 			}
@@ -264,8 +264,8 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 * @return void
 	 */
 	private function importExtension($extensionName) {
-		$sqlFilename = t3lib_div::getFileAbsFileName(t3lib_extMgm::extPath($extensionName) . 'ext_tables.sql');
-		$fileContent = t3lib_div::getUrl($sqlFilename);
+		$sqlFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionName) . 'ext_tables.sql');
+		$fileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($sqlFilename);
 
 		$this->importDatabaseDefinitions($fileContent);
 	}
@@ -287,11 +287,11 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 * @return void
 	 */
 	protected function importStdDb() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
 			/** @var \TYPO3\CMS\Install\Service\SqlExpectedSchemaService $sqlExpectedSchemaService */
-			$sqlExpectedSchemaService = t3lib_div::makeInstance('TYPO3\\CMS\\Install\\Service\\SqlExpectedSchemaService');
+			$sqlExpectedSchemaService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Install\\Service\\SqlExpectedSchemaService');
 			$databaseDefinitions = $sqlExpectedSchemaService->getTablesDefinitionString(TRUE);
-		} elseif (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6001000) {
+		} elseif (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6001000) {
 			$sqlString = array();
 			// Find all ext_tables.sql of loaded extensions
 			$loadedExtensionInformation = $GLOBALS['TYPO3_LOADED_EXT'];
@@ -299,23 +299,21 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 				if ((is_array($extensionConfiguration) || $extensionConfiguration instanceof \ArrayAccess)
 					&& $extensionConfiguration['ext_tables.sql']
 				) {
-					$sqlString[] = t3lib_div::getUrl($extensionConfiguration['ext_tables.sql']);
+					$sqlString[] = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($extensionConfiguration['ext_tables.sql']);
 				}
 			}
 			$databaseDefinitions = implode(LF . LF . LF . LF, $sqlString);
 			unset($sqlString);
 		} else {
-			$sqlFilename = t3lib_div::getFileAbsFileName(PATH_t3lib . 'stddb/tables.sql');
-			$databaseDefinitions = t3lib_div::getUrl($sqlFilename);
+			$sqlFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(PATH_site . 't3lib/stddb/tables.sql');
+			$databaseDefinitions = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($sqlFilename);
 		}
 
 		$this->importDatabaseDefinitions($databaseDefinitions);
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
-			// make sure missing caching framework tables do not get into the way
-			$cacheTables = t3lib_cache::getDatabaseTableDefinitions();
-			$this->importDatabaseDefinitions($cacheTables);
-		}
+		// make sure missing caching framework tables do not get into the way
+		$cacheTables = \TYPO3\CMS\Core\Cache\Cache::getDatabaseTableDefinitions();
+		$this->importDatabaseDefinitions($cacheTables);
 	}
 
 	/**
@@ -327,13 +325,8 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 * @return void
 	 */
 	private function importDatabaseDefinitions($definitionContent) {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 4006000) {
-			/* @var $install t3lib_install_Sql */
-			$install = t3lib_div::makeInstance('t3lib_install_Sql');
-		} else {
-			/* @var $install t3lib_install */
-			$install = t3lib_div::makeInstance('t3lib_install');
-		}
+		/* @var $install \TYPO3\CMS\Install\Sql\SchemaMigrator */
+		$install = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Install\\Sql\\SchemaMigrator');
 
 		$fieldDefinitionsFile = $install->getFieldDefinitions_fileContent($definitionContent);
 		if (empty($fieldDefinitionsFile)) {
@@ -397,7 +390,7 @@ abstract class Tx_Phpunit_Database_TestCase extends Tx_Phpunit_TestCase {
 	 *         will be NULL if the dependencies could not be determined
 	 */
 	private function findDependencies($extKey) {
-		$path = t3lib_div::getFileAbsFileName(t3lib_extMgm::extPath($extKey) . 'ext_emconf.php');
+		$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey) . 'ext_emconf.php');
 		$_EXTKEY = $extKey;
 		// This include is allowed. This is an exception in the TYPO3CMS standard.
 		include($path);

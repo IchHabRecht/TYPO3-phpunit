@@ -67,7 +67,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 
 		$this->subject = new Tx_Phpunit_Framework('tx_phpunit', array('user_phpunittest'));
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
 			$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\Authentication\\FrontendUserAuthentication'] = array(
 				'className' => 'Tx_Phpunit_FrontEnd_UserWithoutCookies',
 			);
@@ -98,7 +98,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @return void
 	 */
 	private function checkForTypo3SixOrHigher() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6000000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6000000) {
 			$this->markTestSkipped('This test is available in TYPO3 6.0 and above.');
 		}
 	}
@@ -132,7 +132,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @return void
 	 */
 	private function checkIfExtensionUserPhpUnittestIsLoaded() {
-		if (!t3lib_extMgm::isLoaded('user_phpunittest')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('user_phpunittest')) {
 			$this->markTestSkipped(
 				'The Extension user_phpunittest is not installed, but needs to be installed. ' .
 					'Please install it from EXT:phpunit/Tests/Unit/Fixtures/Extensions/user_phpunittest/.'
@@ -147,7 +147,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @return void
 	 */
 	private function checkIfExtensionUserPhpUnittest2IsLoaded() {
-		if (!t3lib_extMgm::isLoaded('user_phpunittest')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('user_phpunittest')) {
 			$this->markTestSkipped(
 				'THe extension user_phpunittest2 is not installed, but needs to be installed. ' .
 					'Please install it from EXT:phpunit/Tests/Unit/Fixtures/Extensions/user_phpunittest2/.'
@@ -179,7 +179,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 			return;
 		}
 
-		t3lib_div::rmdir($this->foreignFolderToDelete);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::rmdir($this->foreignFolderToDelete);
 		$this->foreignFolderToDelete = '';
 	}
 
@@ -1325,7 +1325,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	/**
 	 * @test
 	 *
-	 * @expectedException t3lib_exception
+	 * @expectedException \TYPO3\CMS\Core\Exception
 	 */
 	public function cleanUpForHookWithoutHookInterfaceThrowsException() {
 		$this->subject->purgeHooks();
@@ -3577,7 +3577,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
      */
     public function deleteDummyFileWithForeignFileThrowsException() {
 		$uniqueFileName = $this->subject->getUniqueFileOrFolderPath('test.txt');
-		t3lib_div::writeFile($uniqueFileName, '');
+		\TYPO3\CMS\Core\Utility\GeneralUtility::writeFile($uniqueFileName, '');
 		$this->foreignFileToDelete = $uniqueFileName;
 
 		$this->subject->deleteDummyFile(basename($uniqueFileName));
@@ -3667,7 +3667,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
      */
     public function deleteDummyFolderWithForeignFolderThrowsException() {
 		$uniqueFolderName = $this->subject->getUniqueFileOrFolderPath('test_folder');
-		t3lib_div::mkdir($uniqueFolderName);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($uniqueFolderName);
 		$this->foreignFolderToDelete = $uniqueFolderName;
 
 		$this->subject->deleteDummyFolder(basename($uniqueFolderName));
@@ -3697,7 +3697,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @expectedException PHPUnit_Framework_Error_Warning
 	 */
 	public function deleteDummyFolderWithNonEmptyDummyFolderRaisesWarning() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
 			$this->markTestSkipped('This test is available in TYPO3 below version 6.2.');
 		}
 
@@ -3715,10 +3715,10 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	/**
 	 * @test
 	 *
-	 * @expectedException t3lib_exception
+	 * @expectedException \TYPO3\CMS\Core\Exception
 	 */
 	public function deleteDummyFolderWithNonEmptyDummyFolderThrowsException() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
 			$this->markTestSkipped('This test is available in TYPO3 6.2 and above.');
 		}
 
@@ -3774,7 +3774,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	/**
      * @test
      *
-     * @expectedException t3lib_exception
+     * @expectedException \TYPO3\CMS\Core\Exception
      */
     public function setUploadFolderPathAfterCreatingDummyFileThrowsException() {
 		$this->subject->createDummyFile();
@@ -4290,7 +4290,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 		$this->subject->createFakeFrontEnd();
 
 		$this->assertTrue(
-			$GLOBALS['TT'] instanceof t3lib_timeTrackNull
+			$GLOBALS['TT'] instanceof \TYPO3\CMS\Core\TimeTracker\NullTimeTracker
 		);
 	}
 
@@ -4302,7 +4302,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 		$this->subject->createFakeFrontEnd();
 
 		$this->assertTrue(
-			$GLOBALS['TSFE']->sys_page instanceof t3lib_pageSelect
+			$GLOBALS['TSFE']->sys_page instanceof \TYPO3\CMS\Frontend\Page\PageRepository
 		);
 	}
 
@@ -4338,7 +4338,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 		$this->subject->createFakeFrontEnd();
 
 		$this->assertTrue(
-			$GLOBALS['TSFE']->tmpl instanceof t3lib_TStemplate
+			$GLOBALS['TSFE']->tmpl instanceof \TYPO3\CMS\Core\TypoScript\TemplateService
 		);
 	}
 
@@ -4394,7 +4394,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @test
 	 */
 	public function loginUserIsZeroAfterCreateFakeFrontEnd() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
 			$this->markTestSkipped('This test is available in TYPO3 below version 6.2.');
 		}
 
@@ -4410,7 +4410,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @test
 	 */
 	public function loginUserIsFalseAfterCreateFakeFrontEnd() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
 			$this->markTestSkipped('This test is available in TYPO3 in version 6.2 and above.');
 		}
 
@@ -4549,7 +4549,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	// and handles relative paths and EXT: paths inconsistently:
 
 	// It correctly resolves paths which are relative to the TYPO3 document
-	// root, but then calls t3lib_stdGraphic::getImageDimensions (which is
+	// root, but then calls \TYPO3\CMS\Core\Imaging\GraphicalFunctions::getImageDimensions (which is
 	// inherited by tslib_gifBuilder) which again uses the relative path. So
 	// IMAGE will use the path to the TYPO3 root (which is the same as relative
 	// to the FE index.php), but getImageDimensions use the path relative to the
@@ -4588,7 +4588,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	/**
      * @test
      *
-     * @expectedException t3lib_exception
+     * @expectedException \TYPO3\CMS\Core\Exception
      */
     public function isLoggedThrowsExceptionWithoutFrontEnd() {
 		$this->subject->isLoggedIn();
@@ -4668,7 +4668,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	/**
      * @test
      *
-     * @expectedException t3lib_exception
+     * @expectedException \TYPO3\CMS\Core\Exception
      */
     public function loginFrontEndUserWithoutFrontEndThrowsException() {
 		$feUserId = $this->subject->createFrontEndUser();
@@ -4727,7 +4727,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
      * @test
      */
     public function logoutFrontEndUserSetsLoginUserToZero() {
-	    if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
+	    if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
 		    $this->markTestSkipped('This test is available in TYPO3 below version 6.2.');
 	    }
 		$this->subject->createFakeFrontEnd();
@@ -4744,7 +4744,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
      * @test
      */
     public function logoutFrontEndUserSetsLoginUserToFalse() {
-	    if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
+	    if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
 		    $this->markTestSkipped('This test is available in TYPO3 in version 6.2 and above.');
 	    }
 		$this->subject->createFakeFrontEnd();
@@ -4760,7 +4760,7 @@ class Tx_Phpunit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	/**
      * @test
      *
-     * @expectedException t3lib_exception
+     * @expectedException \TYPO3\CMS\Core\Exception
      */
     public function logoutFrontEndUserWithoutFrontEndThrowsException() {
 		$this->subject->logoutFrontEndUser();

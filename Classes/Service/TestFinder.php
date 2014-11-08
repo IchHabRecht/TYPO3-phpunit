@@ -20,7 +20,7 @@
  *
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  */
-class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
+class Tx_Phpunit_Service_TestFinder implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * allowed test directory names
 	 *
@@ -211,13 +211,13 @@ class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
 		}
 
 		/** @var $coreTests Tx_Phpunit_Testable */
-		$coreTests = t3lib_div::makeInstance('Tx_Phpunit_Testable');
+		$coreTests = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Testable');
 		$coreTests->setType(Tx_Phpunit_Testable::TYPE_CORE);
 		$coreTests->setKey(Tx_Phpunit_Testable::CORE_KEY);
 		$coreTests->setTitle('TYPO3 Core');
 		$coreTests->setCodePath(PATH_site);
 		$coreTests->setTestsPath($this->getAbsoluteCoreTestsPath());
-		$coreTests->setIconPath(t3lib_extMgm::extRelPath('phpunit') . 'Resources/Public/Icons/Typo3.png');
+		$coreTests->setIconPath(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('phpunit') . 'Resources/Public/Icons/Typo3.png');
 
 		return array(Tx_Phpunit_Testable::CORE_KEY => $coreTests);
 	}
@@ -274,18 +274,7 @@ class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
 	 * @return string[] the keys of the loaded extensions, might be empty
 	 */
 	protected function getLoadedExtensionKeys() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6000000) {
-			$allExtensionKeys = t3lib_extMgm::getLoadedExtensionListArray();
-		} else {
-			$requiredExtensionList = t3lib_extMgm::getRequiredExtensionList();
-			$loadedExtensionList = isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extList'])
-				? $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList'] : '';
-
-			$allExtensionKeys = array_unique(
-				t3lib_div::trimExplode(',', $loadedExtensionList . ',' . $requiredExtensionList, TRUE)
-			);
-		}
-
+		$allExtensionKeys = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getLoadedExtensionListArray();
 		return $allExtensionKeys;
 	}
 
@@ -296,7 +285,7 @@ class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
 	 * @return string[] the keys of the excluded extensions, might be empty
 	 */
 	protected function getExcludedExtensionKeys() {
-		return t3lib_div::trimExplode(',', $this->extensionSettingsService->getAsString('excludeextensions'), TRUE);
+		return \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->extensionSettingsService->getAsString('excludeextensions'), TRUE);
 	}
 
 	/**
@@ -322,16 +311,16 @@ class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
 		$testsPath = $this->findTestsPathForExtension($extensionKey);
 
 		/** @var $testable Tx_Phpunit_Testable */
-		$testable = t3lib_div::makeInstance('Tx_Phpunit_Testable');
+		$testable = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Testable');
 		$testable->setType(Tx_Phpunit_Testable::TYPE_EXTENSION);
 		$testable->setKey($extensionKey);
 		$testable->setTitle($extensionKey);
-		$testable->setCodePath(t3lib_extMgm::extPath($extensionKey));
+		$testable->setCodePath(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey));
 		$testable->setTestsPath($testsPath);
 		$possibleIconFileNames = array('ext_icon.gif', 'ext_icon.png');
 		foreach ($possibleIconFileNames as $fileNameCandidate) {
-			if (file_exists(t3lib_extMgm::extPath($extensionKey) . $fileNameCandidate)) {
-				$testable->setIconPath(t3lib_extMgm::extRelPath($extensionKey) . $fileNameCandidate);
+			if (file_exists(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey) . $fileNameCandidate)) {
+				$testable->setIconPath(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extensionKey) . $fileNameCandidate);
 				break;
 			}
 		}
@@ -359,7 +348,7 @@ class Tx_Phpunit_Service_TestFinder implements t3lib_Singleton {
 
 		$testsPath = '';
 		try {
-			$extensionPath = t3lib_extMgm::extPath($extensionKey);
+			$extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey);
 
 			foreach (self::$allowedTestDirectoryNames as $testDirectoryName) {
 				if (is_dir($extensionPath . $testDirectoryName)) {

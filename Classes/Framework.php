@@ -17,7 +17,7 @@ if (!defined('PATH_tslib')) {
 	/**
 	 * @var string
 	 */
-	define('PATH_tslib', t3lib_extMgm::extPath('cms') . 'tslib/');
+	define('PATH_tslib', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('cms') . 'tslib/');
 }
 
 /**
@@ -132,7 +132,7 @@ class Tx_Phpunit_Framework {
 	/**
 	 * an instance used for retrieving a unique file name
 	 *
-	 * @var t3lib_basicFileFunctions
+	 * @var \TYPO3\CMS\Core\Utility\File\BasicFileUtility
 	 */
 	static protected $fileNameProcessor = NULL;
 
@@ -184,12 +184,10 @@ class Tx_Phpunit_Framework {
 		$this->createListOfAdditionalAllowedTables();
 		$this->uploadFolderPath = PATH_site . 'uploads/' . $this->tablePrefix . '/';
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6000000) {
-			$this->allowedSystemTables = array_merge(
-				$this->allowedSystemTables,
-				array('sys_file', 'sys_file_collection', 'sys_file_reference', 'sys_category', 'sys_category_record_mm')
-			);
-		}
+		$this->allowedSystemTables = array_merge(
+			$this->allowedSystemTables,
+			array('sys_file', 'sys_file_collection', 'sys_file_reference', 'sys_category', 'sys_category_record_mm')
+		);
 	}
 
 	/**
@@ -666,7 +664,7 @@ class Tx_Phpunit_Framework {
 	 * @return void
 	 *
 	 * @throws InvalidArgumentException
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	public function createRelationAndUpdateCounter(
 		$tableName, $uidLocal, $uidForeign, $columnName
@@ -686,7 +684,7 @@ class Tx_Phpunit_Framework {
 		$relationConfiguration = $tca['columns'][$columnName];
 
 		if (!isset($relationConfiguration['config']['MM']) || ($relationConfiguration['config']['MM'] === '')) {
-			throw new t3lib_exception(
+			throw new \TYPO3\CMS\Core\Exception(
 				'The column ' . $columnName . ' in the table ' . $tableName .
 					' is not configured to contain m:n relations using a m:n table.',
 				1334439257
@@ -760,7 +758,7 @@ class Tx_Phpunit_Framework {
 	 *
 	 * @return void
 	 *
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	public function cleanUp($performDeepCleanUp = FALSE) {
 		$this->cleanUpTableSet(FALSE, $performDeepCleanUp);
@@ -770,7 +768,7 @@ class Tx_Phpunit_Framework {
 
 		foreach ($this->getHooks() as $hook) {
 			if (!($hook instanceof Tx_Phpunit_Interface_FrameworkCleanupHook)) {
-				throw new t3lib_exception(
+				throw new \TYPO3\CMS\Core\Exception(
 					'The class ' . get_class($hook) . ' must implement Tx_Phpunit_Interface_FrameworkCleanupHook.',
 					1299257923
 				);
@@ -832,7 +830,7 @@ class Tx_Phpunit_Framework {
 		// If the upload folder was created by the testing framework, it can be
 		// removed at once.
 		if (isset($this->dummyFolders['uploadFolder'])) {
-			t3lib_div::rmdir($this->getUploadFolderPath(), TRUE);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::rmdir($this->getUploadFolderPath(), TRUE);
 			$this->dummyFolders = array();
 			$this->dummyFiles = array();
 		} else {
@@ -863,14 +861,14 @@ class Tx_Phpunit_Framework {
 	 * @return string
 	 *         the absolute path of the created dummy file, will not be empty
 	 *
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	public function createDummyFile($fileName = 'test.txt', $content = '') {
 		$this->createDummyUploadFolder();
 		$uniqueFileName = $this->getUniqueFileOrFolderPath($fileName);
 
-		if (!t3lib_div::writeFile($uniqueFileName, $content)) {
-			throw new t3lib_exception('The file ' . $uniqueFileName . ' could not be created.', 1334439291);
+		if (!\TYPO3\CMS\Core\Utility\GeneralUtility::writeFile($uniqueFileName, $content)) {
+			throw new \TYPO3\CMS\Core\Exception('The file ' . $uniqueFileName . ' could not be created.', 1334439291);
 		}
 
 		$this->addToDummyFileList($uniqueFileName);
@@ -897,7 +895,7 @@ class Tx_Phpunit_Framework {
 	 * @return string
 	 *         the absolute path of the created dummy ZIP archive, will not be empty
 	 *
-	 * @throws t3lib_exception if the PHP installation does not provide ZIPArchive
+	 * @throws \TYPO3\CMS\Core\Exception if the PHP installation does not provide ZIPArchive
 	 */
 	public function createDummyZipArchive($fileName = 'test.zip', array $filesToAddToArchive = array()) {
 		$this->checkForZipArchive();
@@ -907,14 +905,14 @@ class Tx_Phpunit_Framework {
 		$zip = new ZipArchive();
 
 		if ($zip->open($uniqueFileName, ZipArchive::CREATE) !== TRUE) {
-			throw new t3lib_exception('The new ZIP archive "' . $fileName . '" could not be created.', 1334439299);
+			throw new \TYPO3\CMS\Core\Exception('The new ZIP archive "' . $fileName . '" could not be created.', 1334439299);
 		}
 
 		$contents = !empty($filesToAddToArchive) ? $filesToAddToArchive : array($this->createDummyFile());
 
 		foreach ($contents as $pathToFile) {
 			if (!file_exists($pathToFile)) {
-				throw new t3lib_exception(
+				throw new \TYPO3\CMS\Core\Exception(
 					'The provided path "' . $pathToFile . '" does not point to an existing file.', 1334439306
 				);
 			}
@@ -952,7 +950,7 @@ class Tx_Phpunit_Framework {
 	 * @return void
 	 *
 	 * @throws InvalidArgumentException
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	public function deleteDummyFile($fileName) {
 		$absolutePathToFile = $this->uploadFolderPath . $fileName;
@@ -968,7 +966,7 @@ class Tx_Phpunit_Framework {
 		}
 
 		if ($fileExists && !unlink($absolutePathToFile)) {
-			throw new t3lib_exception('The file "' . $absolutePathToFile . '" could not be deleted.', 1334439327);
+			throw new \TYPO3\CMS\Core\Exception('The file "' . $absolutePathToFile . '" could not be deleted.', 1334439327);
 		}
 
 		unset($this->dummyFiles[$fileName]);
@@ -985,14 +983,14 @@ class Tx_Phpunit_Framework {
 	 * @return string
 	 *         the absolute path of the created dummy folder, will not be empty
 	 *
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	public function createDummyFolder($folderName) {
 		$this->createDummyUploadFolder();
 		$uniqueFolderName = $this->getUniqueFileOrFolderPath($folderName);
 
-		if (!t3lib_div::mkdir($uniqueFolderName)) {
-			throw new t3lib_exception('The folder ' . $uniqueFolderName . ' could not be created.', 1334439333);
+		if (!\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($uniqueFolderName)) {
+			throw new \TYPO3\CMS\Core\Exception('The folder ' . $uniqueFolderName . ' could not be created.', 1334439333);
 		}
 
 		$relativeUniqueFolderName = $this->getPathRelativeToUploadDirectory($uniqueFolderName);
@@ -1016,7 +1014,7 @@ class Tx_Phpunit_Framework {
 	 * @return void
 	 *
 	 * @throws InvalidArgumentException
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	public function deleteDummyFolder($folderName) {
 		$absolutePathToFolder = $this->uploadFolderPath . $folderName;
@@ -1035,8 +1033,8 @@ class Tx_Phpunit_Framework {
 			);
 		}
 
-		if (!t3lib_div::rmdir($absolutePathToFolder)) {
-			throw new t3lib_exception('The folder "' . $absolutePathToFolder . '" could not be deleted.', 1334439393);
+		if (!\TYPO3\CMS\Core\Utility\GeneralUtility::rmdir($absolutePathToFolder)) {
+			throw new \TYPO3\CMS\Core\Exception('The folder "' . $absolutePathToFolder . '" could not be deleted.', 1334439393);
 		}
 
 		unset($this->dummyFolders[$folderName]);
@@ -1047,18 +1045,18 @@ class Tx_Phpunit_Framework {
 	 *
 	 * @return void
 	 *
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 */
 	protected function createDummyUploadFolder() {
 		if (is_dir($this->getUploadFolderPath())) {
 			return;
 		}
 
-		if (t3lib_div::mkdir($this->getUploadFolderPath())) {
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->getUploadFolderPath())) {
 			// registers the upload folder as dummy folder
 			$this->dummyFolders['uploadFolder'] = $this->getUploadFolderPath();
 		} else {
-			throw new t3lib_exception('The upload folder ' . $this->getUploadFolderPath() . ' could not be created.', 1334439408);
+			throw new \TYPO3\CMS\Core\Exception('The upload folder ' . $this->getUploadFolderPath() . ' could not be created.', 1334439408);
 		}
 	}
 
@@ -1073,14 +1071,14 @@ class Tx_Phpunit_Framework {
 	 *
 	 * @return void
 	 *
-	 * @throws t3lib_exception
+	 * @throws \TYPO3\CMS\Core\Exception
 	 *         if there are dummy files within the current upload folder as
 	 *         these files could not be deleted if the upload folder path has
 	 *         changed
 	 */
 	public function setUploadFolderPath($absolutePath) {
 		if (!empty($this->dummyFiles) || !empty($this->dummyFolders)) {
-			throw new t3lib_exception(
+			throw new \TYPO3\CMS\Core\Exception(
 				'The upload folder path must not be changed if there are already dummy files or folders.', 1334439424
 			);
 		}
@@ -1150,12 +1148,12 @@ class Tx_Phpunit_Framework {
 		}
 
 		if (!self::$fileNameProcessor) {
-			self::$fileNameProcessor = t3lib_div::makeInstance('t3lib_basicFileFunctions');
+			self::$fileNameProcessor = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\\TYPO3\\CMS\\Core\\Utility\\File\\BasicFileUtility');
 		}
 
 		return self::$fileNameProcessor->getUniqueName(
 			basename($path),
-			$this->uploadFolderPath . t3lib_div::dirname($path)
+			$this->uploadFolderPath . \TYPO3\CMS\Core\Utility\GeneralUtility::dirname($path)
 		);
 	}
 
@@ -1190,10 +1188,10 @@ class Tx_Phpunit_Framework {
 		$this->suppressFrontEndCookies();
 		$this->discardFakeFrontEnd();
 
-		$GLOBALS['TT'] = t3lib_div::makeInstance('t3lib_TimeTrackNull');
+		$GLOBALS['TT'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TimeTracker\\NullTimeTracker');
 
 		/** @var $frontEnd tslib_fe */
-		$frontEnd = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $pageUid, 0);
+		$frontEnd = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $pageUid, 0);
 		$GLOBALS['TSFE'] = $frontEnd;
 
 		// simulates a normal FE without any logged-in FE or BE user
@@ -1298,7 +1296,7 @@ class Tx_Phpunit_Framework {
 	 *
 	 * @return void
 	 *
-	 * @throws t3lib_exception if no front end has been created
+	 * @throws \TYPO3\CMS\Core\Exception if no front end has been created
 	 * @throws InvalidArgumentException
 	 */
 	public function loginFrontEndUser($userId) {
@@ -1306,7 +1304,7 @@ class Tx_Phpunit_Framework {
 			throw new InvalidArgumentException('The user ID must be > 0.', 1334439475);
 		}
 		if (!$this->hasFakeFrontEnd()) {
-			throw new t3lib_exception('Please create a front end before calling loginFrontEndUser.', 1334439483);
+			throw new \TYPO3\CMS\Core\Exception('Please create a front end before calling loginFrontEndUser.', 1334439483);
 		}
 
 		if ($this->isLoggedIn()) {
@@ -1329,13 +1327,13 @@ class Tx_Phpunit_Framework {
 	 *
 	 * If no front-end user is logged in, this function does nothing.
 	 *
-	 * @throws t3lib_exception if no front end has been created
+	 * @throws \TYPO3\CMS\Core\Exception if no front end has been created
 	 *
 	 * @return void
 	 */
 	public function logoutFrontEndUser() {
 		if (!$this->hasFakeFrontEnd()) {
-			throw new t3lib_exception('Please create a front end before calling logoutFrontEndUser.', 1334439488);
+			throw new \TYPO3\CMS\Core\Exception('Please create a front end before calling logoutFrontEndUser.', 1334439488);
 		}
 		if (!$this->isLoggedIn()) {
 			return;
@@ -1350,13 +1348,13 @@ class Tx_Phpunit_Framework {
 	/**
 	 * Checks whether a FE user is logged in.
 	 *
-	 * @throws t3lib_exception if no front end has been created
+	 * @throws \TYPO3\CMS\Core\Exception if no front end has been created
 	 *
 	 * @return boolean TRUE if a FE user is logged in, FALSE otherwise
 	 */
 	public function isLoggedIn() {
 		if (!$this->hasFakeFrontEnd()) {
-			throw new t3lib_exception('Please create a front end before calling isLoggedIn.', 1334439494);
+			throw new \TYPO3\CMS\Core\Exception('Please create a front end before calling isLoggedIn.', 1334439494);
 		}
 
 		return isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE'])
@@ -1811,7 +1809,7 @@ class Tx_Phpunit_Framework {
 	 * @throws InvalidArgumentException
 	 */
 	public function markTableAsDirty($tableNames) {
-		foreach (t3lib_div::trimExplode(',', $tableNames) as $currentTable) {
+		foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $tableNames) as $currentTable) {
 			if ($this->isNoneSystemTableNameAllowed($currentTable)) {
 				$this->dirtyTables[$currentTable] = $currentTable;
 			} elseif ($this->isSystemTableNameAllowed($currentTable)) {
@@ -1930,13 +1928,13 @@ class Tx_Phpunit_Framework {
 	 * Note: This function can be used to mark tests as skipped if this class is
 	 *       not available but required for a test to pass succesfully.
 	 *
-	 * @throws t3lib_exception if the PHP installation does not provide ZIPArchive
+	 * @throws \TYPO3\CMS\Core\Exception if the PHP installation does not provide ZIPArchive
 	 *
 	 * @return void
 	 */
 	public function checkForZipArchive() {
 		if (!in_array('zip', get_loaded_extensions())) {
-			throw new t3lib_exception('This PHP installation does not provide the ZIPArchive class.', 1334439642);
+			throw new \TYPO3\CMS\Core\Exception('This PHP installation does not provide the ZIPArchive class.', 1334439642);
 		}
 	}
 
@@ -1950,7 +1948,7 @@ class Tx_Phpunit_Framework {
 			$hookClasses = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['phpunit']['FrameworkCleanUp'];
 			if (is_array($hookClasses)) {
 				foreach ($hookClasses as $hookClass) {
-					self::$hooks[] = t3lib_div::getUserObj($hookClass);
+					self::$hooks[] = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($hookClass);
 				}
 			}
 

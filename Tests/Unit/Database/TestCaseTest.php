@@ -35,7 +35,7 @@ class Tx_Phpunit_Database_TestCaseTest extends Tx_Phpunit_Database_TestCase {
 		= 'Please make sure that the current DB user has global SELECT, INSERT, CREATE, ALTER and DROP permissions.';
 
 	/**
-	 * @var t3lib_DB
+	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection
 	 */
 	protected $db = NULL;
 
@@ -134,7 +134,7 @@ class Tx_Phpunit_Database_TestCaseTest extends Tx_Phpunit_Database_TestCase {
 	 * @test
 	 */
 	public function extensionAlteringTable() {
-		if (!t3lib_extMgm::isLoaded('aaa') || !t3lib_extMgm::isLoaded('bbb')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('aaa') || !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('bbb')) {
 			$this->markTestSkipped(
 				'This test can only be run if the extensions aaa and bbb ' .
 					'from tests/res are installed.'
@@ -168,8 +168,8 @@ class Tx_Phpunit_Database_TestCaseTest extends Tx_Phpunit_Database_TestCase {
 	 * @test
 	 */
 	public function recursiveImportingExtensions() {
-		if (!t3lib_extMgm::isLoaded('aaa') || !t3lib_extMgm::isLoaded('bbb')
-			|| !t3lib_extMgm::isLoaded('ccc')
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('aaa') || !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('bbb')
+			|| !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('ccc')
 		) {
 			$this->markTestSkipped(
 				'This test can only be run if the extensions aaa, bbb and ccc ' .
@@ -190,8 +190,8 @@ class Tx_Phpunit_Database_TestCaseTest extends Tx_Phpunit_Database_TestCase {
 	 * @test
 	 */
 	public function skippingDependencyExtensions() {
-		if (!t3lib_extMgm::isLoaded('aaa') || !t3lib_extMgm::isLoaded('bbb')
-			|| !t3lib_extMgm::isLoaded('ccc') || !t3lib_extMgm::isLoaded('ddd')
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('aaa') || !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('bbb')
+			|| !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('ccc') || !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('ddd')
 		) {
 			$this->markTestSkipped(
 				'This test can only be run if the extensions aaa, bbb, ccc ' .
@@ -218,7 +218,7 @@ class Tx_Phpunit_Database_TestCaseTest extends Tx_Phpunit_Database_TestCase {
 	 * @test
 	 */
 	public function importingDataSet() {
-		if (!t3lib_extMgm::isLoaded('ccc')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('ccc')) {
 			$this->markTestSkipped(
 				'This test can only be run if the extension ccc from ' .
 					'tests/res is installed.'
@@ -226,7 +226,7 @@ class Tx_Phpunit_Database_TestCaseTest extends Tx_Phpunit_Database_TestCase {
 		}
 
 		$this->importExtensions(array('ccc'));
-		$this->importDataSet(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Database/Fixtures/DataSet.xml');
+		$this->importDataSet(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/Database/Fixtures/DataSet.xml');
 
 		$result = $this->db->exec_SELECTgetRows('*', 'tx_ccc_test', NULL);
 		$this->assertSame(
