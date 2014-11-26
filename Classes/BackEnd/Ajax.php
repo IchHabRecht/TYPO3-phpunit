@@ -55,7 +55,7 @@ class Tx_Phpunit_BackEnd_Ajax {
 	public function __construct($initializeUserSettingsService = TRUE) {
 		if ($initializeUserSettingsService) {
 			/** @var $userSettingsService Tx_Phpunit_Service_UserSettingsService */
-			$userSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_UserSettingsService');
+			$userSettingsService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_UserSettingsService');
 			$this->injectUserSettingsService($userSettingsService);
 		}
 	}
@@ -88,8 +88,8 @@ class Tx_Phpunit_BackEnd_Ajax {
 	 * @return void
 	 */
 	public function ajaxBroker(array $unused, TYPO3AJAX $ajax) {
-		$state = (boolean) t3lib_div::_POST('state');
-		$checkbox = t3lib_div::_POST('checkbox');
+		$state = (boolean) \TYPO3\CMS\Core\Utility\GeneralUtility::_POST('state');
+		$checkbox = \TYPO3\CMS\Core\Utility\GeneralUtility::_POST('checkbox');
 
 		if (in_array($checkbox, $this->validCheckboxKeys, TRUE)) {
 			$ajax->setContentFormat('json');

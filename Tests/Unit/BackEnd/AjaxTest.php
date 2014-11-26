@@ -12,10 +12,6 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6000000) {
-	require_once(PATH_site . 'typo3/classes/class.typo3ajax.php');
-}
-
 /**
  * Test case.
  *
