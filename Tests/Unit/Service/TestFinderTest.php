@@ -56,7 +56,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$this->extensionSettingsService = new Tx_Phpunit_TestingDataContainer();
 		$this->subject->injectExtensionSettingsService($this->extensionSettingsService);
 
-		$this->fixturesPath = t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service/Fixtures/';
+		$this->fixturesPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/Service/Fixtures/';
 	}
 
 	public function tearDown() {
@@ -105,9 +105,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function createAccessibleProxyCreatesTestFinderSubclass() {
-		$this->assertTrue(
-			$this->createAccessibleProxy() instanceof Tx_Phpunit_Service_TestFinder
-		);
+		$this->assertInstanceOf('Tx_Phpunit_Service_TestFinder', $this->createAccessibleProxy());
 	}
 
 
@@ -119,9 +117,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function classIsSingleton() {
-		$this->assertTrue(
-			$this->subject instanceof t3lib_Singleton
-		);
+		$this->assertInstanceOf('TYPO3\\CMS\\Core\\SingletonInterface', $this->subject);
 	}
 
 	/**
@@ -617,60 +613,8 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestableForCore());
 		$this->assertSame(
-			t3lib_extMgm::extRelPath('phpunit') . 'Resources/Public/Icons/Typo3.png',
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('phpunit') . 'Resources/Public/Icons/Typo3.png',
 			$testable->getIconPath()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getLoadedExtensionKeysReturnsKeysOfLoadedExtensions() {
-		$version = t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version);
-		if ($version < 6000000 || $version >= 6002000) {
-			$this->markTestSkipped('This test is available in TYPO3 6.0 and 6.1.');
-		}
-
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extListArray'] = array('bar');
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = '';
-
-		$this->assertContains(
-			'bar',
-			$this->subject->getLoadedExtensionKeys()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getLoadedExtensionKeysReturnsKeysOfLoadedExtensionsBelowVersionSix() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6000000) {
-			$this->markTestSkipped('This test is available in TYPO3 below version 6.0.');
-		}
-
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extList'] = 'bar';
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = '';
-
-		$this->assertContains(
-			'bar',
-			$this->subject->getLoadedExtensionKeys()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getLoadedExtensionKeysReturnsKeysOfRequiredExtensions() {
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6000000) {
-			$this->markTestSkipped('This test is available in TYPO3 below version 6.0.');
-		}
-
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extList'] = '';
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = 'foo';
-
-		$this->assertContains(
-			'foo',
-			$this->subject->getLoadedExtensionKeys()
 		);
 	}
 
@@ -684,43 +628,6 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$this->assertContains(
 			'cms',
 			$this->subject->getLoadedExtensionKeys()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getLoadedExtensionKeysReturnsKeysThatAreBothLoadedAndRequiredOnlyOnce() {
-		if (!method_exists('t3lib_extMgm', 'getLoadedExtensionListArray')) {
-			$this->markTestSkipped('This test is only available in TYPO3 6.0 and above.');
-		}
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) >= 6002000) {
-			$this->markTestSkipped('This test is only available in TYPO3 below version 6.2.');
-		}
-
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extListArray'] = array('foo');
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = array('foo');
-
-		$this->assertSame(
-			explode(',', REQUIRED_EXTENSIONS . ',foo'),
-			$this->subject->getLoadedExtensionKeys()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getLoadedExtensionKeysReturnsKeysThatAreBothLoadedAndRequiredOnlyOnceBelowVersionSix() {
-		if (method_exists('t3lib_extMgm', 'getLoadedExtensionListArray')) {
-			$this->markTestSkipped('This test is available in TYPO3 below version 6.0.');
-		}
-
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extList'] = 'foo';
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = 'foo';
-
-		$this->assertSame(
-			array('foo'),
-			array_filter($this->subject->getLoadedExtensionKeys(), array($this, 'keepOnlyFooElements'))
 		);
 	}
 
@@ -884,7 +791,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @expectedException Tx_Phpunit_Exception_NoTestsDirectory
 	 */
 	public function findTestsPathForExtensionForExtensionWithoutTestsPathThrowsException() {
-		if (!t3lib_extMgm::isLoaded('ccc')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('ccc')) {
 			$this->markTestSkipped(
 				'This test can only be run if the extension "ccc" from Tests/Unit/Fixtures/Extensions/ is installed.'
 			);
@@ -901,7 +808,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 */
 	public function findTestsPathForExtensionForExtensionWithUpperFirstTestsDirectoryReturnsThatDirectory() {
 		$this->assertSame(
-			strtolower(t3lib_extMgm::extPath('phpunit') . 'Tests/'),
+			strtolower(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'),
 			strtolower($this->subject->findTestsPathForExtension('phpunit'))
 		);
 	}
@@ -913,14 +820,14 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * case-insensitive file system.
 	 */
 	public function findTestsPathForExtensionForExtensionWithLowerCaseTestsDirectoryReturnsThatDirectory() {
-		if (!t3lib_extMgm::isLoaded('bbb')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('bbb')) {
 			$this->markTestSkipped(
 				'This test can only be run if the extension "bbb" from Tests/Unit/Fixtures/Extensions/ is installed.'
 			);
 		}
 
 		$this->assertSame(
-			strtolower(t3lib_extMgm::extPath('bbb') . 'tests/'),
+			strtolower(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('bbb') . 'tests/'),
 			strtolower($this->subject->findTestsPathForExtension('bbb'))
 		);
 	}
@@ -1049,7 +956,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('phpunit')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('phpunit')->will($this->returnValue(t3lib_extMgm::extPath('phpunit') . 'Tests/'));
+			->with('phpunit')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
@@ -1071,7 +978,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('phpunit')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('phpunit')->will($this->returnValue(t3lib_extMgm::extPath('phpunit') . 'Tests/'));
+			->with('phpunit')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
@@ -1093,7 +1000,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('phpunit')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('phpunit')->will($this->returnValue(t3lib_extMgm::extPath('phpunit') . 'Tests/'));
+			->with('phpunit')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
@@ -1115,12 +1022,12 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('phpunit')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('phpunit')->will($this->returnValue(t3lib_extMgm::extPath('phpunit') . 'Tests/'));
+			->with('phpunit')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		$this->assertSame(
-			t3lib_extMgm::extPath('phpunit'),
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit'),
 			$testable->getCodePath()
 		);
 	}
@@ -1137,12 +1044,12 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('phpunit')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('phpunit')->will($this->returnValue(t3lib_extMgm::extPath('phpunit') . 'Tests/'));
+			->with('phpunit')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		$this->assertSame(
-			t3lib_extMgm::extPath('phpunit') . 'Tests/',
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/',
 			$testable->getTestsPath()
 		);
 	}
@@ -1159,12 +1066,12 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('phpunit')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('phpunit')->will($this->returnValue(t3lib_extMgm::extPath('phpunit') . 'Tests/'));
+			->with('phpunit')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		$this->assertSame(
-			t3lib_extMgm::extRelPath('phpunit') . 'ext_icon.gif',
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('phpunit') . 'ext_icon.gif',
 			$testable->getIconPath()
 		);
 	}
@@ -1173,7 +1080,7 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getTestablesForExtensionsWithPngIconProvidesTestableInstanceWithIconPath() {
-		if (!t3lib_extMgm::isLoaded('user_phpunittest')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('user_phpunittest')) {
 			$this->markTestSkipped(
 				'The Extension user_phpunittest is not installed, but needs to be installed. ' .
 					'Please install it from EXT:phpunit/Tests/Unit/Fixtures/Extensions/user_phpunittest/.'
@@ -1188,12 +1095,12 @@ class Tx_Phpunit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$testFinder->expects($this->once())->method('getLoadedExtensionKeys')->will($this->returnValue(array('user_phpunittest')));
 		$testFinder->expects($this->once())->method('getExcludedExtensionKeys')->will($this->returnValue(array()));
 		$testFinder->expects($this->once())->method('findTestsPathForExtension')
-			->with('user_phpunittest')->will($this->returnValue(t3lib_extMgm::extPath('user_phpunittest') . 'Tests/'));
+			->with('user_phpunittest')->will($this->returnValue(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('user_phpunittest') . 'Tests/'));
 
 		/** @var $testable Tx_Phpunit_Testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		$this->assertSame(
-			t3lib_extMgm::extRelPath('user_phpunittest') . 'ext_icon.png',
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('user_phpunittest') . 'ext_icon.png',
 			$testable->getIconPath()
 		);
 	}

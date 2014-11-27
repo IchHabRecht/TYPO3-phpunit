@@ -44,7 +44,7 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 		$this->userSettingsService = new Tx_Phpunit_TestingDataContainer();
 		$this->subject->injectUserSettingsService($this->userSettingsService);
 
-		$this->fixturesPath = t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service/Fixtures/';
+		$this->fixturesPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/Service/Fixtures/';
 	}
 
 	public function tearDown() {
@@ -56,8 +56,9 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function classIsSingleton() {
-		$this->assertTrue(
-			$this->subject instanceof t3lib_Singleton
+		$this->assertInstanceOf(
+			'TYPO3\\CMS\\Core\\SingletonInterface',
+			$this->subject
 		);
 	}
 
@@ -136,7 +137,7 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 
 		$this->assertContains(
 			$path,
-			$this->subject->findTestCaseFilesInDirectory(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/')
+			$this->subject->findTestCaseFilesInDirectory(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/')
 		);
 	}
 
@@ -144,7 +145,7 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function findTestCaseFilesInDirectoryAcceptsPathWithTrailingSlash() {
-		$result = $this->subject->findTestCaseFilesInDirectory(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service');
+		$result = $this->subject->findTestCaseFilesInDirectory(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/Service');
 
 		$this->assertFalse(
 			empty($result)
@@ -156,7 +157,7 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 	 */
 	public function findTestCaseFilesInDirectoryAcceptsPathWithoutTrailingSlash() {
 		$result = $this->subject->findTestCaseFilesInDirectory(
-			t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service'
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/Service'
 		);
 
 		$this->assertFalse(
@@ -168,7 +169,7 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function findTestCaseFilesInDirectorySortsFileNamesInAscendingOrder() {
-		$result = $this->subject->findTestCaseFilesInDirectory(t3lib_extMgm::extPath('phpunit') . 'Tests/Unit/Service/');
+		$result = $this->subject->findTestCaseFilesInDirectory(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/Unit/Service/');
 
 		$fileName1 = 'DatabaseTest.php';
 		$fileName2 = 'TestFinderTest.php';
@@ -194,13 +195,13 @@ class Tx_Phpunit_Service_TestCaseServiceTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function findTestCaseFilesInDirectoryNotFindsFixtureClassesWithLowercasePath() {
-		if (!t3lib_extMgm::isLoaded('aaa')) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('aaa')) {
 			$this->markTestSkipped(
 				'This test can only be run if the extension "aaa" from Tests/Unit/Fixtures/Extensions/ is installed.'
 			);
 		}
 
-		$path = t3lib_extMgm::extPath('aaa') . 'Tests/Unit/';
+		$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('aaa') . 'Tests/Unit/';
 		$fileName = 'AnotherTest.php';
 
 		$this->assertNotContains(

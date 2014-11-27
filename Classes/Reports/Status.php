@@ -12,6 +12,8 @@
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This class provides a status report for the "Reports" BE module.
  *
@@ -39,7 +41,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 	 * The constructor.
 	 */
 	public function __construct() {
-		$this->extensionSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_ExtensionSettingsService');
+		$this->extensionSettingsService = GeneralUtility::makeInstance('Tx_Phpunit_Service_ExtensionSettingsService');
 	}
 
 	/**
@@ -93,7 +95,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 		$method = new ReflectionMethod('tx_phpunit_Reports_Status', 'getStatus');
 		if (strlen($method->getDocComment()) > 0) {
 			/** @var $status tx_reports_reports_status_Status */
-			$status = t3lib_div::makeInstance(
+			$status = GeneralUtility::makeInstance(
 				'tx_reports_reports_status_Status',
 				$heading,
 				$this->translate('status_phpComments_present_short'),
@@ -102,7 +104,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 			);
 		} else {
 			/** @var $status tx_reports_reports_status_Status */
-			$status = t3lib_div::makeInstance(
+			$status = GeneralUtility::makeInstance(
 				'tx_reports_reports_status_Status',
 				$heading,
 				$this->translate('status_phpComments_stripped_short'),
@@ -125,7 +127,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 
 		if (!extension_loaded('eaccelerator')) {
 			/** @var $status tx_reports_reports_status_Status */
-			$status = t3lib_div::makeInstance(
+			$status = GeneralUtility::makeInstance(
 				'tx_reports_reports_status_Status',
 				$heading,
 				$this->translate('status_eAccelerator_notInstalled_short'),
@@ -142,7 +144,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 				);
 
 				/** @var $status tx_reports_reports_status_Status */
-				$status = t3lib_div::makeInstance(
+				$status = GeneralUtility::makeInstance(
 					'tx_reports_reports_status_Status',
 					$heading,
 					$this->translate('status_eAccelerator_installedOld_short'),
@@ -156,7 +158,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 				);
 
 				/** @var $status tx_reports_reports_status_Status */
-				$status = t3lib_div::makeInstance(
+				$status = GeneralUtility::makeInstance(
 					'tx_reports_reports_status_Status',
 					$heading,
 					$this->translate('status_eAccelerator_installedNew_short'),
@@ -182,7 +184,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 			$messageKey = 'status_notLoaded';
 		}
 
-		return t3lib_div::makeInstance(
+		return GeneralUtility::makeInstance(
 			'tx_reports_reports_status_Status',
 			$this->translate('status_xdebug'),
 			$this->translate($messageKey),
@@ -199,9 +201,9 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 	 */
 	protected function getMemoryLimitStatus() {
 		$memoryLimitFromConfiguration = ini_get('memory_limit');
-		$memoryLimitInBytes = t3lib_div::getBytesFromSizeMeasurement($memoryLimitFromConfiguration);
-		$requiredMemoryLimitInBytes = t3lib_div::getBytesFromSizeMeasurement(self::MEMORY_REQUIRED);
-		$recommendedMemoryLimitInBytes = t3lib_div::getBytesFromSizeMeasurement(self::MEMORY_RECOMMENDED);
+		$memoryLimitInBytes = GeneralUtility::getBytesFromSizeMeasurement($memoryLimitFromConfiguration);
+		$requiredMemoryLimitInBytes = GeneralUtility::getBytesFromSizeMeasurement(self::MEMORY_REQUIRED);
+		$recommendedMemoryLimitInBytes = GeneralUtility::getBytesFromSizeMeasurement(self::MEMORY_RECOMMENDED);
 
 		$heading = $this->translate('status_memoryLimit');
 		$message = sprintf(
@@ -211,7 +213,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 
 		if ($memoryLimitInBytes < $requiredMemoryLimitInBytes) {
 			/** @var $status tx_reports_reports_status_Status */
-			$status = t3lib_div::makeInstance(
+			$status = GeneralUtility::makeInstance(
 				'tx_reports_reports_status_Status',
 				$heading,
 				$memoryLimitFromConfiguration,
@@ -220,7 +222,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 			);
 		} elseif ($memoryLimitInBytes < $recommendedMemoryLimitInBytes) {
 			/** @var $status tx_reports_reports_status_Status */
-			$status = t3lib_div::makeInstance(
+			$status = GeneralUtility::makeInstance(
 				'tx_reports_reports_status_Status',
 				$heading,
 				$memoryLimitFromConfiguration,
@@ -229,7 +231,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 			);
 		} else {
 			/** @var $status tx_reports_reports_status_Status */
-			$status = t3lib_div::makeInstance(
+			$status = GeneralUtility::makeInstance(
 				'tx_reports_reports_status_Status',
 				$heading,
 				$memoryLimitFromConfiguration,
@@ -255,7 +257,7 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 			$escapedPaths[] = htmlspecialchars($path);
 		}
 
-		return t3lib_div::makeInstance(
+		return GeneralUtility::makeInstance(
 			'tx_reports_reports_status_Status',
 			$this->translate('status_includePath'),
 			'',
@@ -271,9 +273,9 @@ class Tx_Phpunit_Reports_Status implements tx_reports_StatusProvider {
 	 *         a status about the excluded extensions
 	 */
 	protected function getExcludedExtensionsStatus() {
-		$extensionKeys = t3lib_div::trimExplode(',', $this->extensionSettingsService->getAsString('excludeextensions'));
+		$extensionKeys = GeneralUtility::trimExplode(',', $this->extensionSettingsService->getAsString('excludeextensions'));
 
-		return t3lib_div::makeInstance(
+		return GeneralUtility::makeInstance(
 			'tx_reports_reports_status_Status',
 			$this->translate('status_excludedExtensions'),
 			'',

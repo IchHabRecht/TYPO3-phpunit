@@ -165,7 +165,7 @@ class Tx_Phpunit_TestableTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function setCodePathSetsCodePath() {
-		$path = t3lib_extMgm::extPath('phpunit');
+		$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit');
 		$this->subject->setCodePath($path);
 
 		$this->assertSame(
@@ -197,7 +197,7 @@ class Tx_Phpunit_TestableTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function setTestsPathSetsTestsPath() {
-		$path = t3lib_extMgm::extPath('phpunit') . 'Tests/';
+		$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') . 'Tests/';
 		$this->subject->setTestsPath($path);
 
 		$this->assertSame(
