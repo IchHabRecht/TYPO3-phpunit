@@ -26,7 +26,7 @@ if (!defined('TYPO3_cliMode')) {
  *
  * @author Michael Klapper <michael.klapper@aoemedia.de>
  */
-abstract class Tx_Phpunit_TestRunner_AbstractCliTestRunner extends t3lib_cli {
+abstract class Tx_Phpunit_TestRunner_AbstractCliTestRunner extends \TYPO3\CMS\Core\Controller\CommandLineController {
 	/**
 	 * Additional help text for the command line
 	 *

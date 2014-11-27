@@ -25,7 +25,7 @@ class Tx_Phpunit_Service_Database {
 	/**
 	 * page object which we will use to call enableFields on
 	 *
-	 * @var t3lib_pageSelect
+	 * @var \TYPO3\CMS\Frontend\Page\PageRepository
 	 */
 	static private $pageForEnableFields = NULL;
 
@@ -68,7 +68,7 @@ class Tx_Phpunit_Service_Database {
 	}
 
 	/**
-	 * Wrapper function for t3lib_pageSelect::enableFields() since it is no
+	 * Wrapper function for \TYPO3\CMS\Frontend\Page\PageRepository::enableFields() since it is no
 	 * longer accessible statically.
 	 *
 	 * Returns a part of a WHERE clause which will filter out records with
@@ -138,7 +138,7 @@ class Tx_Phpunit_Service_Database {
 				self::$pageForEnableFields = $GLOBALS['TSFE']->sys_page;
 			} else {
 				self::$pageForEnableFields
-					= t3lib_div::makeInstance('t3lib_pageSelect');
+					= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
 			}
 		}
 	}
@@ -729,9 +729,6 @@ class Tx_Phpunit_Service_Database {
 			throw new BadMethodCallException('The table "' . $tableName . '" does not exist.', 1331315679);
 		}
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6001000) {
-			t3lib_div::loadTCA($tableName);
-		}
 		if (!isset($GLOBALS['TCA'][$tableName])) {
 			throw new BadMethodCallException('The table "' . $tableName . '" has no TCA.', 1331315694);
 		}

@@ -12,7 +12,7 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-require_once(t3lib_extMgm::extPath('phpunit') .  'Tests/Unit/Fixtures/ProtectedClass.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpunit') .  'Tests/Unit/Fixtures/ProtectedClass.php');
 
 /**
  * Test case.

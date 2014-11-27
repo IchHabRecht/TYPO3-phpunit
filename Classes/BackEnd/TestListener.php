@@ -284,8 +284,8 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 				$expected = $comparisonFailure->getExpectedAsString();
 				$actual = $comparisonFailure->getActualAsString();
 
-				/** @var $diff t3lib_diff */
-				$diff = t3lib_div::makeInstance('t3lib_diff');
+				/** @var $diff \TYPO3\CMS\Core\Utility\DiffUtility */
+				$diff = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Utility\\DiffUtility');
 				$this->outputService->output('<code>' . $diff->makeDiffDisplay($actual, $expected) . '</code>');
 			}
 		}
@@ -303,7 +303,7 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 		$testCaseTraceData = array();
 
 		foreach ($traceData as $singleTraceArr) {
-			if (!stristr(t3lib_div::fixWindowsFilePath($singleTraceArr['file']), 'Framework/Assert.php')) {
+			if (!stristr(\TYPO3\CMS\Core\Utility\GeneralUtility::fixWindowsFilePath($singleTraceArr['file']), 'Framework/Assert.php')) {
 				$testCaseTraceData = $singleTraceArr;
 				break;
 			}
@@ -498,7 +498,7 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 		$output = '</div>';
 		if ($this->enableShowMemoryAndTime === TRUE) {
 			$output .= '<span class="memory-leak small-font"><strong>Memory leak:</strong> ' .
-				t3lib_div::formatSize($leakedMemory) . 'B </span>' .
+				\TYPO3\CMS\Core\Utility\GeneralUtility::formatSize($leakedMemory) . 'B </span>' .
 				'<span class="time-usages small-font"><strong>Time:</strong> ' . sprintf('%.4f', $time) .
 				' sec.</span><br />';
 		}
@@ -520,7 +520,7 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 	 */
 	protected function createReRunLink(PHPUnit_Framework_TestCase $test) {
 		$iconImageTag = '<img class="runner" src="' .
-			t3lib_extMgm::extRelPath('phpunit') . 'Resources/Public/Icons/Runner.gif" alt="" />';
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('phpunit') . 'Resources/Public/Icons/Runner.gif" alt="" />';
 		return '<a href="' . $this->createReRunUrl($test) . '" title="Run this test only">' . $iconImageTag . '</a> ';
 	}
 
@@ -542,16 +542,10 @@ class Tx_Phpunit_BackEnd_TestListener implements PHPUnit_Framework_TestListener 
 				'[' . Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']' => $this->createTestId($test),
 		);
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
-			return htmlspecialchars('mod.php?M=' . Tx_Phpunit_BackEnd_Module::MODULE_NAME .
-				t3lib_div::implodeArrayForUrl('', $urlParameters, '', TRUE, TRUE)
-			);
-		} else {
-			return htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(
-				Tx_Phpunit_BackEnd_Module::MODULE_NAME,
-				$urlParameters
-			));
-		}
+		return htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(
+			Tx_Phpunit_BackEnd_Module::MODULE_NAME,
+			$urlParameters
+		));
 	}
 
 	/**

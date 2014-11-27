@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Unit testing for TYPO3. Includes PHPUnit 3.7, Selenium, a BE test runner module, a CLI test runner, PhpStorm integration and a testing framework.',
 	'category' => 'module',
 	'shy' => 0,
-	'version' => '4.3.5',
+	'version' => '4.4.0',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -36,7 +36,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'php' => '5.3.0-5.6.99',
-			'typo3' => '4.5.0-6.2.99',
+			'typo3' => '6.2.4-7.0.99',
 		),
 		'conflicts' => array(
 		),

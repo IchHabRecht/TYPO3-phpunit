@@ -20,7 +20,7 @@
  *
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  */
-class Tx_Phpunit_Service_OutputService implements t3lib_Singleton {
+class Tx_Phpunit_Service_OutputService implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * Echoes $output.
 	 *
