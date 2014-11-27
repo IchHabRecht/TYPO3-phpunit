@@ -131,7 +131,7 @@ class Tx_Phpunit_Selenium_TestCaseTest extends Tx_Phpunit_TestCase {
 	 */
 	public function getSeleniumBrowserUrlForNoConfiguredBrowserUrlReturnsDefaultUrl() {
 		$expected = rtrim(
-			t3lib_div::getIndpEnv('TYPO3_SITE_URL'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'),
 			Tx_Phpunit_Selenium_TestCase::DEFAULT_SELENIUM_BROWSER_URL
 		);
 
