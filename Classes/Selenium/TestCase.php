@@ -68,7 +68,7 @@ class Tx_Phpunit_Selenium_TestCase extends PHPUnit_Extensions_Selenium2TestCase 
 	 */
 	public function __construct($name = NULL, array $data = array(), $dataName = '', Tx_Phpunit_Interface_ExtensionSettingsService $extensionSettingsService = NULL) {
 		if ($extensionSettingsService === NULL) {
-			$extensionSettingsService = t3lib_div::makeInstance('Tx_Phpunit_Service_ExtensionSettingsService');
+			$extensionSettingsService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Phpunit_Service_ExtensionSettingsService');
 		}
 		$this->extensionSettingsService = $extensionSettingsService;
 
@@ -176,6 +176,6 @@ class Tx_Phpunit_Selenium_TestCase extends PHPUnit_Extensions_Selenium2TestCase 
 	protected function getSeleniumBrowserUrl() {
 		return $this->extensionSettingsService->hasString('selenium_browserurl')
 			? $this->extensionSettingsService->getAsString('selenium_browserurl')
-			: rtrim(t3lib_div::getIndpEnv('TYPO3_SITE_URL'), self::DEFAULT_SELENIUM_BROWSER_URL);
+			: rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), self::DEFAULT_SELENIUM_BROWSER_URL);
 	}
 }
