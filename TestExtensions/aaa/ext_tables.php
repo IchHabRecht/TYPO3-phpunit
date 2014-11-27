@@ -13,6 +13,6 @@ $TCA['tx_aaa_test'] = array(
 			'disabled' => 'hidden',
 		),
 		'hideTable' => TRUE,
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
+		'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'tca.php',
 	),
 );
