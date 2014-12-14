@@ -2016,7 +2016,7 @@ class Tx_Phpunit_Framework {
 	 *
 	 * @return DatabaseConnection
 	 */
-	static protected function getDatabaseConnection() {
+	sprotected function getDatabaseConnection() {
 		return $GLOBALS['TYPO3_DB'];
 	}
 }
