@@ -591,7 +591,41 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 		$this->testStatistics->start();
 
 		if ($this->shouldCollectCodeCoverageInformation()) {
-			$this->coverage = GeneralUtility::makeInstance('PHP_CodeCoverage');
+                        // patch WhiteList Feature #64056
+                        $filter = new PHP_CodeCoverage_Filter();
+                        foreach($testablesToProcess as $process) {
+                            try {
+                                $xmlConfig = GeneralUtility::makeInstance('Tx_Phpunit_Service_XmlConfigurationService');
+                                $xmlConfig->loadFile($process->getTestsPath());
+
+                                foreach($xmlConfig->getWhitelist() as $filename)
+                                {
+                                    if(is_file($filename)){
+                                        $filter->addFileToWhitelist($filename);
+                                    } else {
+                                        $filter->addDirectoryToWhitelist($filename);
+                                    }
+                                }
+
+                                foreach($xmlConfig->getBlacklist() as $filename)
+                                {
+                                    if(is_file($filename)){
+                                        $filter->addFileToBlacklist($filename);
+                                    } else {
+                                        $filter->addDirectoryToBlacklist($filename);
+                                    }
+                                }
+                            }
+                            catch(Exception $e) {
+                                /** @ToDo if no phpunit.xml file can be found load some default? 
+                                 *  Maybe use the $testablesToProcess[]->getCodePath() for the
+                                 *  default whitelist.
+                                 */
+                                
+                            }
+                        }
+                        $this->coverage = t3lib_div::makeInstance('PHP_CodeCoverage', NULL, $filter);
+                        // end patch WhiteList Feature #64056			
 			$this->coverage->start('phpunit');
 		}
 
