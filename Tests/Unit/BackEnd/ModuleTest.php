@@ -327,6 +327,31 @@ class Tx_Phpunit_BackEnd_ModuleTest extends Tx_Phpunit_TestCase {
 		$subject->renderRunTests();
 	}
 
+        /**
+	 * @test
+	 */
+	public function renderRunSingleTestWithCodeCoverageForRunAllTestsCommandRendersIntroAndTests() {
+		if (!extension_loaded('xdebug')) {
+			$this->markTestSkipped('This tests requires the "xdebug" extension for php to be loaded.');
+		}
+
+                /** @var $subject Tx_Phpunit_BackEnd_Module|PHPUnit_Framework_MockObject_MockObject */
+		$subject = $this->getMock($this->createAccessibleProxy(), array('renderRunTestsIntro', 'renderRunningTest'));
+		$subject->injectRequest($this->request);
+		$subject->injectOutputService($this->outputService);
+		$subject->injectTestFinder($this->testFinder);
+
+		$this->userSettingsService->set('extSel', 'phpunit', 'codeCoverage');
+		$subject->injectUserSettingsService($this->userSettingsService);
+
+		$subject->expects($this->once())->method('renderRunTestsIntro');
+		$subject->expects($this->once())->method('renderRunningTest');
+
+		$this->request->set('command', 'runalltests');
+
+		$subject->renderRunTests();
+	}
+
 	/**
 	 * @test
 	 */

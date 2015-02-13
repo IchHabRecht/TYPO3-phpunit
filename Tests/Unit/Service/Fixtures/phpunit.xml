@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">.\typo3conf\ext\dhb_package_manager\Classes\Domain\Model</directory>
+            <directory suffix=".php">.\typo3conf\ext\dhb_package_manager\Classes\Service</directory>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">.\typo3conf\ext\dhb_package_manager\Classes\Domain\Repository</directory>
+            <directory suffix=".php">.\typo3conf\ext\dhb_package_manager\Classes\ViewHelpers</directory>
+            <file>.\path\to\whitefile1</file>
+            <file>.\path\to\whitefile2</file>
+            <exclude>
+              <directory suffix=".php">/path/to/blackdirectory</directory>
+              <file>/path/to/blackfile1</file>
+              <file>/path/to/blackfile2</file>
+              <file>/path/to/blackfile3</file>
+            </exclude>
+        </blacklist>
+    </filter>
+</phpunit>

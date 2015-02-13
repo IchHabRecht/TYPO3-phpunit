@@ -591,8 +591,26 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 		$this->testStatistics->start();
 
 		if ($this->shouldCollectCodeCoverageInformation()) {
-			$this->coverage = GeneralUtility::makeInstance('PHP_CodeCoverage');
-			$this->coverage->start('phpunit');
+                        $filter = new PHP_CodeCoverage_Filter();
+                        foreach($testablesToProcess as $process) {
+                            try {
+                                $xmlConfig = GeneralUtility::makeInstance('Tx_Phpunit_Service_XmlConfigurationService');
+                                $xmlConfig->loadFile($process->getTestsPath());
+                                $this->collectCodeCoverageWhiteList($filter, $xmlConfig);
+                                $this->collectCodeCoverageBlackList($filter, $xmlConfig);
+                            }
+                            catch(Exception $e) {
+                                /**
+                                 * In the case there was no valid phpunit.xml file found inside
+                                 * the extension test path a default whitelist will be defined here.
+                                 */
+                                foreach ($testablesToProcess as $process) {
+                                    $filter->addDirectoryToWhitelist($process->getCodePath());
+                                }
+                            }
+                        }
+                        $this->coverage = t3lib_div::makeInstance('PHP_CodeCoverage', NULL, $filter);
+                        $this->coverage->start('phpunit');
 		}
 
 		if ($this->request->hasString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) {
@@ -613,7 +631,51 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 		}
 	}
 
-	/**
+        /**
+         * Sets the PHPUnit whitelist filter for code coverage
+         *
+         * Collects the file names and directories out of the xml configuration
+         * and defines the whitelist filter for the PHPUnit code coverage.
+         *
+         * @param PHP_CodeCoverage_Filter $filter
+         * @param Tx_Phpunit_Service_XmlConfigurationService $xmlConfig
+         * @return PHP_CodeCoverage_Filter
+         */
+        protected function collectCodeCoverageWhiteList(PHP_CodeCoverage_Filter &$filter,
+                Tx_Phpunit_Service_XmlConfigurationService $xmlConfig) {
+            foreach ($xmlConfig->getWhitelist() as $filename) {
+                if (is_file($filename)){
+                    $filter->addFileToWhitelist($filename);
+                } else {
+                    $filter->addDirectoryToWhitelist($filename);
+                }
+            }
+            return $filter;
+        }
+
+        /**
+         * Sets the PHPUnit blacklist filter for code coverage
+         *
+         * Collects the file names and directories out of the xml configuration
+         * and defines the blacklist filter for the PHPUnit code coverage.
+         *
+         * @param PHP_CodeCoverage_Filter $filter
+         * @param Tx_Phpunit_Service_XmlConfigurationService $xmlConfig
+         * @return PHP_CodeCoverage_Filter
+         */
+        protected function collectCodeCoverageBlackList(PHP_CodeCoverage_Filter &$filter,
+                Tx_Phpunit_Service_XmlConfigurationService $xmlConfig) {
+            foreach ($xmlConfig->getWhitelist() as $filename) {
+                if (is_file($filename)){
+                    $filter->addFileToWhitelist($filename);
+                } else {
+                    $filter->addDirectoryToWhitelist($filename);
+                }
+            }
+            return $filter;
+        }
+
+        /**
 	 * Sets the PHPUnit error handler to catch all errors.
 	 * This is important as PHPUnit only sets its error handler if nothing has been set before,
 	 * but typically an error handler is set during by TYPO3 during the initialization.
