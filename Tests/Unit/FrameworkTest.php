@@ -2938,10 +2938,7 @@ class Tx_Phpunit_Tests_Unit_FrameworkTest extends Tx_PhpUnit_TestCase {
 			'uid = ' . $uid
 		);
 
-		self::assertSame(
-			'',
-			$row['header']
-		);
+		self::assertNull($row['header']);
 	}
 
 	/**
