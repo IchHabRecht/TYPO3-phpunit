@@ -45,7 +45,7 @@ $GLOBALS['TCA']['tx_phpunit_test'] = array(
 		),
 		'title' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:phpunit/Resource/Private/Language/locallang_backend.xml:tx_phpunit_test.title',
+			'label' => 'LLL:EXT:phpunit/Resource/Private/Language/locallang_backend.xlf:tx_phpunit_test.title',
 			'config' => array(
 				'type' => 'none',
 				'size' => '30',
