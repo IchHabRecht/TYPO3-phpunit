@@ -2930,7 +2930,10 @@ class Tx_Phpunit_Tests_Unit_FrameworkTest extends Tx_PhpUnit_TestCase {
 	 * @test
 	 */
 	public function contentElementHasNoHeaderByDefault() {
-		$uid = $this->subject->createContentElement();
+		$uid = $this->subject->createContentElement(
+			0,
+			array('header' => '')
+		);
 
 		$row = Tx_Phpunit_Service_Database::selectSingle(
 			'header',
