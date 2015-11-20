@@ -131,7 +131,7 @@ class Tx_Phpunit_Tests_Unit_ViewHelpers_ExtensionSelectorViewHelperTest extends 
 		$this->subject->render();
 
 		self::assertRegExp(
-			'/<option class="alltests" value="uuall"[^>]* selected="selected">/',
+			'<option class="alltests" value="uuall" selected="selected">',
 			$this->outputService->getCollectedOutput()
 		);
 	}
