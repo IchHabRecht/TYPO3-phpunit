@@ -2939,7 +2939,7 @@ class Tx_Phpunit_Tests_Unit_FrameworkTest extends Tx_PhpUnit_TestCase {
 		);
 
 		self::assertSame(
-			'',
+			NULL,
 			$row['header']
 		);
 	}
