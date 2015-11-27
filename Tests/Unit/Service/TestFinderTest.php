@@ -724,7 +724,7 @@ class Tx_Phpunit_Tests_Unit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		/** @var Tx_Phpunit_Testable $testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		self::assertSame(
-			ExtensionManagementUtility::extRelPath('phpunit') . 'ext_icon.gif',
+			ExtensionManagementUtility::extRelPath('phpunit') . 'ext_icon.png',
 			$testable->getIconPath()
 		);
 	}
