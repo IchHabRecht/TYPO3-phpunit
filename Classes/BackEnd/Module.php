@@ -501,6 +501,9 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 
 		$currentStyle = $this->createIconStyle($extensionKey);
 
+		if (count($testsOptionsArr) === 0)
+			return '';
+
 		return '<form action="' . htmlspecialchars(BackendUtility::getModuleUrl('tools_txphpunitbeM1')) . '" method="post">
 				<p>
 					<select style="' . $currentStyle . '" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
@@ -516,8 +519,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 					Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE .
 					']" value="' . $testCaseFile . '" />
 				</p>
-			</form>
-		';
+			</form>';
 	}
 
 	/**
