@@ -711,6 +711,13 @@ class Tx_Phpunit_Tests_Unit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getTestablesForExtensionsWithGifIconProvidesTestableInstanceWithIconPath() {
+		if (!ExtensionManagementUtility::isLoaded('user_phpunittest')) {
+			self::markTestSkipped(
+					'The Extension user_phpunittest is not installed, but needs to be installed. ' .
+					'Please install it from EXT:phpunit/TestExtensions/user_phpunittest/.'
+			);
+		}
+
 		/** @var Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject $testFinder */
 		$testFinder = $this->getMock(
 			'Tx_Phpunit_Service_TestFinder',
@@ -724,7 +731,7 @@ class Tx_Phpunit_Tests_Unit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		/** @var Tx_Phpunit_Testable $testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		self::assertSame(
-			ExtensionManagementUtility::extRelPath('phpunit') . 'ext_icon.gif',
+			ExtensionManagementUtility::extRelPath('user_phpunittest') . 'ext_icon.gif',
 			$testable->getIconPath()
 		);
 	}
@@ -733,13 +740,6 @@ class Tx_Phpunit_Tests_Unit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getTestablesForExtensionsWithPngIconProvidesTestableInstanceWithIconPath() {
-		if (!ExtensionManagementUtility::isLoaded('user_phpunittest')) {
-			self::markTestSkipped(
-				'The Extension user_phpunittest is not installed, but needs to be installed. ' .
-					'Please install it from EXT:phpunit/TestExtensions/user_phpunittest/.'
-			);
-		}
-
 		/** @var Tx_Phpunit_Service_TestFinder|PHPUnit_Framework_MockObject_MockObject $testFinder */
 		$testFinder = $this->getMock(
 			'Tx_Phpunit_Service_TestFinder',
@@ -753,7 +753,7 @@ class Tx_Phpunit_Tests_Unit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		/** @var Tx_Phpunit_Testable $testable */
 		$testable = array_pop($testFinder->getTestablesForExtensions());
 		self::assertSame(
-			ExtensionManagementUtility::extRelPath('user_phpunittest') . 'ext_icon.png',
+			ExtensionManagementUtility::extRelPath('phpunit') . 'ext_icon.png',
 			$testable->getIconPath()
 		);
 	}
