@@ -501,23 +501,25 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 
 		$currentStyle = $this->createIconStyle($extensionKey);
 
+		if (count($testsOptionsArr) < 1)
+			return '';
+
 		return '<form action="' . htmlspecialchars(BackendUtility::getModuleUrl('tools_txphpunitbeM1')) . '" method="post">
-				<p>
-					<select style="' . $currentStyle . '" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-					Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']">
-					<option value="">' . $this->translate('select_tests') . '</option>' . $testOptionsHtml . '</select>
-					<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-					Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE .
-					']" value="run" accesskey="s">' . $this->translate('run_single_test') . '</button>
-					<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-					Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND .
-					']" value="runsingletest" />
-					<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-					Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE .
-					']" value="' . $testCaseFile . '" />
-				</p>
-			</form>
-		';
+					<p>
+						<select style="' . $currentStyle . '" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+						Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']">
+						<option value="">' . $this->translate('select_tests') . '</option>' . $testOptionsHtml . '</select>
+						<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+						Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE .
+						']" value="run" accesskey="s">' . $this->translate('run_single_test') . '</button>
+						<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+						Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND .
+						']" value="runsingletest" />
+						<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+						Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE .
+						']" value="' . $testCaseFile . '" />
+					</p>
+				</form>';
 	}
 
 	/**
