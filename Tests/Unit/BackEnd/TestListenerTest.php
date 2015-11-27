@@ -676,7 +676,7 @@ class Tx_Phpunit_Tests_Unit_BackEnd_TestListenerTest extends Tx_Phpunit_TestCase
 		$testCase = $this->getMock('PHPUnit_Framework_TestCase', array(), array('myTest'));
 
 		self::assertContains(
-			'mod.php?M=' . Tx_Phpunit_BackEnd_Module::MODULE_NAME,
+			'.php?M=' . Tx_Phpunit_BackEnd_Module::MODULE_NAME,
 			$this->subject->createReRunUrl($testCase)
 		);
 	}
