@@ -301,7 +301,7 @@ class Tx_Phpunit_Tests_Unit_Service_TestFinderTest extends Tx_Phpunit_TestCase {
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['requiredExt'] = '';
 
 		self::assertContains(
-			'cms',
+			'core',
 			$this->subject->getLoadedExtensionKeys()
 		);
 	}
