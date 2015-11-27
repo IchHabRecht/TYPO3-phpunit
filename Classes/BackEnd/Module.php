@@ -384,10 +384,10 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
 
         /** @var FlashMessage $message */
         $message = GeneralUtility::makeInstance(
-            'TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
-            $this->translate('test_are_run_in_current_backend_context'),
-            '',
-            FlashMessage::WARNING
+                'TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
+                $this->translate('test_are_run_in_current_backend_context'),
+                '',
+                FlashMessage::WARNING
         );
         $this->outputService->output($message->render());
 
@@ -467,18 +467,18 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         $currentStyle = $this->createIconStyle($extensionKey);
 
         return '<form action="' . htmlspecialchars(BackendUtility::getModuleUrl('tools_txphpunitbeM1')) . '" method="post">' .
-        '<p>' .
-        '<select style="' . $currentStyle . '" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE . ']">' .
-        '<option value="">' . htmlspecialchars($this->translate('select_tests')) . '</option>' .
-        implode(LF, $testCaseFileOptionsArray) . '</select>' .
-        '<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE . ']" value="run" accesskey="f">' .
-        $this->translate('runTestCaseFile') . '</button>' .
-        '<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND . ']" value="runTestCaseFile" />' .
-        '</p>' .
-        '</form>';
+                '<p>' .
+                    '<select style="' . $currentStyle . '" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE . ']">' .
+                    '<option value="">' . htmlspecialchars($this->translate('select_tests')) . '</option>' .
+                    implode(LF, $testCaseFileOptionsArray) . '</select>' .
+                    '<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE . ']" value="run" accesskey="f">' .
+                    $this->translate('runTestCaseFile') . '</button>' .
+                    '<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND . ']" value="runTestCaseFile" />' .
+                '</p>' .
+            '</form>';
     }
 
     /**
@@ -540,6 +540,10 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
             }
         }
 
+        if (count($testsOptionsArr) === 0) {
+            return '';
+        }
+
         // builds options for select (including option groups for test suites)
         $testOptionsHtml = '';
         foreach ($testsOptionsArr as $suiteName => $testArr) {
@@ -555,17 +559,17 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         return '<form action="' . htmlspecialchars(BackendUtility::getModuleUrl('tools_txphpunitbeM1')) . '" method="post">
 				<p>
 					<select style="' . $currentStyle . '" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']">
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']">
 					<option value="">' . $this->translate('select_tests') . '</option>' . $testOptionsHtml . '</select>
 					<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE .
-        ']" value="run" accesskey="s">' . $this->translate('run_single_test') . '</button>
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE .
+                    ']" value="run" accesskey="s">' . $this->translate('run_single_test') . '</button>
 					<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND .
-        ']" value="runsingletest" />
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND .
+                    ']" value="runsingletest" />
 					<input type="hidden" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-        Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE .
-        ']" value="' . $testCaseFile . '" />
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE .
+                    ']" value="' . $testCaseFile . '" />
 				</p>
 			</form>
 		';
@@ -788,8 +792,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
      * @return void
      */
     protected function runSingleTest(
-        PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases,
-        PHPUnit_Framework_TestResult $testResult
+        PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
     ) {
         $this->renderProgressbar();
         /** @var PHPUnit_Framework_TestSuite $testCases */
@@ -821,8 +824,8 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         if (!is_object($testResult)) {
             $this->outputService->output(
                 '<h2 class="hadError">Error</h2><p>The test <strong> ' .
-                htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) .
-                '</strong> could not be found.</p>'
+                    htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) .
+                    '</strong> could not be found.</p>'
             );
         }
     }
@@ -836,8 +839,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
      * @return void
      */
     protected function runTestCase(
-        PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases,
-        PHPUnit_Framework_TestResult $testResult
+        PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
     ) {
         $testCaseFileName = $this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE);
         $this->testListener->setTestSuiteName($testCaseFileName);
@@ -886,8 +888,8 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         if (!is_object($testResult)) {
             $this->outputService->output(
                 '<h2 class="hadError">Error</h2><p>The test <strong> ' .
-                htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) .
-                '</strong> could not be found.</p>'
+                    htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) .
+                    '</strong> could not be found.</p>'
             );
             return;
         }
@@ -902,8 +904,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
      * @return void
      */
     protected function runAllTests(
-        PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases,
-        PHPUnit_Framework_TestResult $testResult
+        PHPUnit_Framework_TestSuite $testSuiteWithAllTestCases, PHPUnit_Framework_TestResult $testResult
     ) {
         $this->testListener->setTotalNumberOfTests($testSuiteWithAllTestCases->count());
         $this->renderProgressbar();
@@ -940,7 +941,6 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
             GeneralUtility::formatSize($this->testStatistics->getMemory()) . 'B (' . $this->testStatistics->getMemory() . ' B) ' .
             $this->translate('tests_leaks') . '</p>';
         $this->outputService->output($testStatistics);
-
     }
 
     /**
@@ -954,20 +954,20 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
             '<form action="' . htmlspecialchars(BackendUtility::getModuleUrl('tools_txphpunitbeM1')) . '" method="post">
 				<p>
 					<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . ' [' .
-            Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE . ']" value="run" accesskey="r">' .
-            $this->translate('run_again') . '</button>
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE . ']" value="run" accesskey="r">' .
+                    $this->translate('run_again') . '</button>
 					<input name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-            Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND . ']" type="hidden" value="' .
-            htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND)) . '" />
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND . ']" type="hidden" value="' .
+                    htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND)) . '" />
 					<input name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-            Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']" type="hidden" value="' .
-            htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) . '" />
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST . ']" type="hidden" value="' .
+                    htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TEST)) . '" />
 					<input name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
-            Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE . ']" type="hidden" value="' .
-            htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) . '" />
+                    Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE . ']" type="hidden" value="' .
+                    htmlspecialchars($this->request->getAsString(Tx_Phpunit_Interface_Request::PARAMETER_KEY_TESTCASE)) . '" />
 				</p>
 			</form>' .
-            '<div id="testsHaveFinished"></div>'
+                '<div id="testsHaveFinished"></div>'
         );
     }
 
@@ -989,8 +989,8 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         $coverageReport->process($this->coverage, $codeCoverageDirectory);
         $this->outputService->output(
             '<p><a target="_blank" href="../typo3temp/codecoverage/index.html">' .
-            'Click here to access the Code Coverage report</a></p>' .
-            '<p>Memory peak usage: ' . GeneralUtility::formatSize(memory_get_peak_usage()) . 'B</p>'
+                'Click here to access the Code Coverage report</a></p>' .
+                '<p>Memory peak usage: ' . GeneralUtility::formatSize(memory_get_peak_usage()) . 'B</p>'
         );
     }
 
@@ -1028,8 +1028,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         $onClick = "phpunitbeWin=window.open(" . GeneralUtility::quoteJSvalue($url) .
             ",'phpunitbe','width=790,status=0,menubar=1,resizable=1,location=0,scrollbars=1,toolbar=0');phpunitbeWin.focus();return false;";
         $content = '<a id="opennewwindow" href="" onclick="' . htmlspecialchars($onClick) . '" accesskey="n">
-			<img' . IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/open_in_new_window.gif',
-                'width="19" height="14"') . ' title="' .
+			<img' . IconUtility::skinImg($GLOBALS['BACK_PATH'], 'gfx/open_in_new_window.gif', 'width="19" height="14"') . ' title="' .
             $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xlf:labels.openInNewWindow', 1) . '" class="absmiddle" alt="" />
 			' . $this->translate('open_in_seperate_window') . '
 			</a>
@@ -1102,8 +1101,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
             throw new Tx_Phpunit_Exception_NoTestsDirectory('$extensionKey must not be empty.', 1303503647);
         }
         if (!$this->testFinder->existsTestableForKey($extensionKey)) {
-            throw new Tx_Phpunit_Exception_NoTestsDirectory('The extension ' . $extensionKey . ' is not loaded.',
-                1303503664);
+            throw new Tx_Phpunit_Exception_NoTestsDirectory('The extension ' . $extensionKey . ' is not loaded.', 1303503664);
         }
 
         $testable = $this->testFinder->getTestableForKey($extensionKey);
