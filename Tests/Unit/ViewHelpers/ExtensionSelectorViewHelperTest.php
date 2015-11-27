@@ -131,7 +131,7 @@ class Tx_Phpunit_Tests_Unit_ViewHelpers_ExtensionSelectorViewHelperTest extends 
 		$this->subject->render();
 
 		self::assertContains(
-			'<option class="alltests" value="' . Tx_Phpunit_Testable::ALL_EXTENSIONS . '" selected="selected">',
+			'<option class="alltests" value="' . Tx_Phpunit_Testable::ALL_EXTENSIONS . '" selected="selected" />',
 			$this->outputService->getCollectedOutput()
 		);
 	}
@@ -220,7 +220,7 @@ class Tx_Phpunit_Tests_Unit_ViewHelpers_ExtensionSelectorViewHelperTest extends 
 		$testable1->setKey($extensionKey1);
 		$testable1->setIconPath(ExtensionManagementUtility::extRelPath($extensionKey1) . 'ext_icon.gif');
 
-		$extensionKey2 = 'cms';
+		$extensionKey2 = 'core';
 		$testable2 = new Tx_Phpunit_Testable();
 		$testable2->setKey($extensionKey2);
 		$testable1->setIconPath(ExtensionManagementUtility::extRelPath($extensionKey2) . 'ext_icon.gif');
