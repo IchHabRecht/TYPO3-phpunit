@@ -608,6 +608,8 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass {
 		$selectedTestableKey = $this->getAndSaveSelectedTestableKey();
 		$this->renderTestingHeader($selectedTestableKey);
 
+		$this->renderReRunButton();
+
 		$testablesToProcess = $this->collectTestablesToProcess($selectedTestableKey);
 
 		$this->loadAllFilesContainingTestCasesForTestables($testablesToProcess);
