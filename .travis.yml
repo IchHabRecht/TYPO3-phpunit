@@ -20,6 +20,8 @@ addons:
     packages:
       - parallel
 
+sudo: false
+
 before_install:
   - composer self-update
   - composer --version
