@@ -34,6 +34,12 @@ before_script:
   - ./typo3cms install:setup --non-interactive --database-user-name="root" --database-host-name="localhost" --database-port="3306" --database-name="travis_test" --admin-user-name="admin" --admin-password="password" --site-name="Travis Install"
   - ln -s ../../../phpunit typo3conf/ext/phpunit
   - ./typo3cms extension:install phpunit
+  - >
+    for extension in "aaa bbb ccc ddd user_phpunittest user_phpunittest2"
+    do
+      ln -s ../../../phpunit/TestExtensions/$extension typo3conf/ext/$extension
+      ./typo3cms extension:install $extension
+    done
   # This is needed as long as 7.6.1 isn't released due to wrong slot settings within the core
   # This can be removed with the release of 7.6.1
   - ./typo3cms extension:dumpclassloadinginformation || echo "FAILED"
