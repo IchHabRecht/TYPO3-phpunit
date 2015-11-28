@@ -28,6 +28,7 @@ before_install:
   - composer --version
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - cd ..
   - mkdir typo3.cms
   - cd typo3.cms
