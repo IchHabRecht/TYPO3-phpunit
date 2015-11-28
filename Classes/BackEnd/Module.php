@@ -629,6 +629,8 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
         $selectedTestableKey = $this->getAndSaveSelectedTestableKey();
         $this->renderTestingHeader($selectedTestableKey);
 
+        $this->renderReRunButton();
+
         $testablesToProcess = $this->collectTestablesToProcess($selectedTestableKey);
 
         $this->loadAllFilesContainingTestCasesForTestables($testablesToProcess);
@@ -954,7 +956,7 @@ class Tx_Phpunit_BackEnd_Module extends BaseScriptClass
             '<form action="' . htmlspecialchars(BackendUtility::getModuleUrl('tools_txphpunitbeM1')) . '" method="post">
 				<p>
 					<button type="submit" name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . ' [' .
-            Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE . ']" value="run" accesskey="r">' .
+            Tx_Phpunit_Interface_Request::PARAMETER_KEY_EXECUTE . ']" value="run" accesskey="c">' .
             $this->translate('run_again') . '</button>
 					<input name="' . Tx_Phpunit_Interface_Request::PARAMETER_NAMESPACE . '[' .
             Tx_Phpunit_Interface_Request::PARAMETER_KEY_COMMAND . ']" type="hidden" value="' .
