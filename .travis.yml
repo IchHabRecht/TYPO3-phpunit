@@ -20,6 +20,10 @@ addons:
     packages:
       - parallel
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 sudo: false
 
 before_install:
