@@ -18,7 +18,7 @@ before_script:
   - cp ../phpunit/Tests/Build/composer.json .
   - composer require typo3/cms="$TYPO3"
   - ./typo3cms install:setup --non-interactive --database-user-name="root" --database-host-name="localhost" --database-port="3306" --database-name="travis_test" --admin-user-name="admin" --admin-password="password" --site-name="Travis Install"
-  - ln -s ../../../../phpunit typo3conf/ext/phpunit
+  - ln -s ../../../phpunit typo3conf/ext/phpunit
   - ./typo3cms extension:install phpunit
   - mysql -u root travis_test -e "INSERT INTO be_users (username, password) VALUES ('_cli_phpunit', 'password')"
 
