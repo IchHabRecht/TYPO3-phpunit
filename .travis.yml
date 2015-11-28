@@ -35,8 +35,7 @@ before_script:
   - ln -s ../../../phpunit typo3conf/ext/phpunit
   - ./typo3cms extension:install phpunit
   - >
-    for extension in "aaa bbb ccc ddd user_phpunittest user_phpunittest2"
-    do
+    for extension in "aaa bbb ccc ddd user_phpunittest user_phpunittest2"; do
       ln -s ../../../phpunit/TestExtensions/$extension typo3conf/ext/$extension
       ./typo3cms extension:install $extension
     done
