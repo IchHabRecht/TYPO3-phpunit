@@ -111,6 +111,31 @@ function setProgressBarClass(className) {
 	};
 
 	/**
+	 * Creates/destroys a style dom node for mass hiding of elements
+	 * (performance boost compared to iterative adding of inline styles)
+	 *
+	 * @param {String} className
+	 * @param {String} showState
+     */
+	var toggleStyleNodeForMassHidingOfElements = function(className, showState) {
+		var styleNodeClassName = className + '-hider';
+		var styleNode;
+
+		if (showState === 'none') {
+			styleNode = document.createElement('style');
+			styleNode.type = 'text/css';
+			styleNode.className = styleNodeClassName;
+			styleNode.innerHTML = '.' + className + ' { display: none; }';
+			document.getElementsByTagName('head')[0].appendChild(styleNode);
+		} else {
+			styleNode = document.getElementsByClassName(styleNodeClassName);
+			if (styleNode.length > 0) {
+				document.getElementsByTagName('head')[0].removeChild(styleNode[0]);
+			}
+		}
+	};
+
+	/**
 	 * Maps a checkbox ID to a class name for the corresponding test results.
 	 *
 	 * @param {string} buttonId the ID of a checkbox, e.g. "SET_success"
@@ -164,9 +189,7 @@ function setProgressBarClass(className) {
 			var checkbox = checkboxes[i];
 			var display = checkbox.checked ? 'block' : 'none';
 			var className = mapClasses(checkbox.id);
-			Dom.setStyle(
-				Dom.getElementsByClassName(className), 'display', display
-			);
+			toggleStyleNodeForMassHidingOfElements(className, display);
 		}
 		Event.addListener(checkboxes, 'click', toggle, this, true);
 		Event.addListener('SET_codeCoverage', 'click', toggleCodeCoverage, this, true);
